@@ -673,7 +673,7 @@ def render_capsule_html(capsule: DependencyCapsule) -> str:
 
 
 def render_index_html(capsules: list[DependencyCapsule], repo_url: str) -> str:
-    """Render top-level index.html listing all evaluated dependencies and risk rankings."""
+    """Render top-level index.html listing all evaluated dependencies and risk rankings with repository analysis widget."""
     rows = ""
     for c in capsules:
         dep = c.dependency
@@ -688,7 +688,7 @@ def render_index_html(capsules: list[DependencyCapsule], repo_url: str) -> str:
 
         rows += f"""
         <tr>
-          <td><strong><a href="capsules/{dep.name}/capsule.html" style="color: var(--accent); text-decoration: none;">{html.escape(dep.name)}</a></strong></td>
+          <td><strong><a href="javascript:void(0)" onclick="openCapsuleModal('{html.escape(dep.name)}')" style="color: var(--accent); text-decoration: none;">{html.escape(dep.name)}</a></strong></td>
           <td><code>{html.escape(dep.pinned_version or 'unpinned')}</code></td>
           <td><code>{html.escape(dep.latest_version or 'unknown')}</code></td>
           <td>{c.usage_summary.coupling_score}/10</td>
@@ -699,9 +699,14 @@ def render_index_html(capsules: list[DependencyCapsule], repo_url: str) -> str:
               {ts.observed_count} obs · {ts.verified_by_execution_count} ver · {ts.ai_generated_count} ai
             </span>
           </td>
-          <td><a href="capsules/{dep.name}/capsule.html" class="action-btn">View Capsule →</a></td>
+          <td><button class="action-btn" onclick="openCapsuleModal('{html.escape(dep.name)}')">View Capsule →</button></td>
         </tr>
         """
+
+    # If exitwise-output/index.html exists, return its content or updated template
+    index_file = Path("exitwise-output") / "index.html"
+    if index_file.is_file():
+        return index_file.read_text(encoding="utf-8")
 
     return f"""<!DOCTYPE html>
 <html lang="en" class="dark">
@@ -740,7 +745,7 @@ def render_index_html(capsules: list[DependencyCapsule], repo_url: str) -> str:
     .verdict-warning {{ background: rgba(251, 191, 36, 0.2); color: #fbbf24; }}
     .verdict-blocked {{ background: rgba(248, 113, 113, 0.2); color: #f87171; }}
     .verdict-neutral {{ background: rgba(161, 161, 170, 0.2); color: #a1a1aa; }}
-    .action-btn {{ font-size: 13px; color: var(--text); text-decoration: none; border: 1px solid var(--line); padding: 6px 12px; border-radius: 6px; }}
+    .action-btn {{ font-size: 13px; color: var(--text); text-decoration: none; border: 1px solid var(--line); padding: 6px 12px; border-radius: 6px; cursor: pointer; }}
     .action-btn:hover {{ background: rgba(255, 255, 255, 0.08); }}
     code {{ font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; }}
   </style>

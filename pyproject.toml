@@ -54,6 +54,7 @@ target-version = "py312"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-s"
 markers = [
     "live: tests that hit external services (PyPI, Gemini API)",
 ]

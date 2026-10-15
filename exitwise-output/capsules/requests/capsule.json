@@ -3,9 +3,9 @@
     "schema_version": "1.0.0",
     "tool_name": "Exitwise",
     "tool_version": "0.1.0",
-    "generated_at": "2026-10-15T07:16:33.042459+00:00",
-    "target_repo_url": "C:\\Users\\KRISH\\AppData\\Local\\Temp\\test_linkwatch",
-    "target_commit_sha": "d912307480fcacc57bb07b5de486f57edef5767f",
+    "generated_at": "2026-10-15T11:04:31.316634+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
     "tested_python_versions": [
       "3.13"
     ],
@@ -27,7 +27,7 @@
   },
   "risk_indicators": [
     {
-      "id": "RISK-0005",
+      "id": "RISK-0025",
       "dependency": "requests",
       "severity": "CRITICAL",
       "source": "osv_api",
@@ -55,9 +55,9 @@
     "is_monkey_patched": true,
     "is_test_only": false,
     "coupling_score": 8.5,
-    "ai_characterization": "The repository uses the 'requests' library to manage HTTP sessions and content-type parsing. It imports the 'Session' class directly (aliased as 'S') to instantiate session objects and uses internal utility functions from 'requests.utils' (specifically '_parse_content_type_header') to process response headers. Most critically, the repository performs monkey patching on the 'requests.Session.request' method, replacing it with a custom implementation ('_request') to alter global request behavior.",
+    "ai_characterization": "The repository uses 'requests' as a core networking component, utilizing both high-level Session objects and low-level utility functions from 'requests.utils'. The dependency is heavily integrated into theing logic, integrating with 'certifi' for SSL verification and 'response' objects to extract encoding information. Crucially, most importantly, the code performs direct monkey patching of 'requests.Session.request' to alter its request execution flow, indicating a high degree late-stage coupling.",
     "ai_characterization_evidence_ids": [
-      "EV-AST-0005"
+      "EV-AST-0025"
     ],
     "provenance": "OBSERVED"
   },

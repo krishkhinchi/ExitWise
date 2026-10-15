@@ -1,0 +1,326 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T09:58:19.117646+00:00",
+    "target_repo_url": "https://github.com/krishkhinchi/ExitWise",
+    "target_commit_sha": "a1cb6056dd74cb79bfd38cf66405e0d4ac11062f",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "fastapi",
+    "raw_spec": "fastapi>=0.110.0",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": null,
+    "constraint": ">=0.110.0",
+    "latest_version": "0.143.1",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [],
+  "usage_summary": {
+    "total_files": 3,
+    "total_occurrences": 24,
+    "distinct_symbols": [
+      "fastapi",
+      "fastapi.FastAPI",
+      "fastapi.HTTPException",
+      "fastapi.responses.HTMLResponse",
+      "fastapi.responses.JSONResponse",
+      "fastapi.staticfiles.StaticFiles"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 4.8,
+    "ai_characterization": "The repository uses fastapi as its primary web framework, serving as the core application entry point and routing mechanism. The dependency is used to instantiate the main FastAPI app instance, define API endpoints via decorators, and manage HTTP exceptions and specialized response types like HTMLResponse. The coupling is deep because the application logic is tightly integrated with FastAPI's core classes and exception handling.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0005"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "api/index.py",
+      "line": 5,
+      "col": 0,
+      "symbol": "fastapi.FastAPI",
+      "kind": "import_from",
+      "snippet": "      2 | \n      3 | import json\n      4 | from pathlib import Path\n >    5 | from fastapi import FastAPI, HTTPException\n      6 | from fastapi.responses import HTMLResponse\n      7 | \n      8 | app = FastAPI(title=\"Exitwise Dashboard\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 5,
+      "col": 0,
+      "symbol": "fastapi.HTTPException",
+      "kind": "import_from",
+      "snippet": "      2 | \n      3 | import json\n      4 | from pathlib import Path\n >    5 | from fastapi import FastAPI, HTTPException\n      6 | from fastapi.responses import HTMLResponse\n      7 | \n      8 | app = FastAPI(title=\"Exitwise Dashboard\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 6,
+      "col": 0,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "import_from",
+      "snippet": "      3 | import json\n      4 | from pathlib import Path\n      5 | from fastapi import FastAPI, HTTPException\n >    6 | from fastapi.responses import HTMLResponse\n      7 | \n      8 | app = FastAPI(title=\"Exitwise Dashboard\")\n      9 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 8,
+      "col": 6,
+      "symbol": "fastapi.FastAPI",
+      "kind": "call",
+      "snippet": "      5 | from fastapi import FastAPI, HTTPException\n      6 | from fastapi.responses import HTMLResponse\n      7 | \n >    8 | app = FastAPI(title=\"Exitwise Dashboard\")\n      9 | \n     10 | # Resolve capsule directory relative to this file so it works on Vercel's filesystem\n     11 | CAPSULE_DIR = Path(__file__).resolve().parent.parent / \"exitwise-output\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 41,
+      "col": 14,
+      "symbol": "fastapi.HTTPException",
+      "kind": "call",
+      "snippet": "     38 | async def get_capsule(name: str):\n     39 |     cap_json = CAPSULE_DIR / \"capsules\" / name / \"capsule.json\"\n     40 |     if not cap_json.exists():\n >   41 |         raise HTTPException(status_code=404, detail=\"Capsule not found\")\n     42 |     return json.loads(cap_json.read_text(encoding=\"utf-8\"))\n     43 | \n     44 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 49,
+      "col": 14,
+      "symbol": "fastapi.HTTPException",
+      "kind": "call",
+      "snippet": "     46 | async def view_capsule(name: str):\n     47 |     html_file = CAPSULE_DIR / \"capsules\" / name / \"capsule.html\"\n     48 |     if not html_file.exists():\n >   49 |         raise HTTPException(status_code=404, detail=\"Capsule not found\")\n     50 |     return HTMLResponse(content=html_file.read_text(encoding=\"utf-8\"))\n     51 | \n     52 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 50,
+      "col": 11,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "call",
+      "snippet": "     47 |     html_file = CAPSULE_DIR / \"capsules\" / name / \"capsule.html\"\n     48 |     if not html_file.exists():\n     49 |         raise HTTPException(status_code=404, detail=\"Capsule not found\")\n >   50 |     return HTMLResponse(content=html_file.read_text(encoding=\"utf-8\"))\n     51 | \n     52 | \n     53 | @app.get(\"/capsules/{name}/capsule.html\", response_class=HTMLResponse)",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 57,
+      "col": 14,
+      "symbol": "fastapi.HTTPException",
+      "kind": "call",
+      "snippet": "     54 | async def view_capsule_static(name: str):\n     55 |     html_file = CAPSULE_DIR / \"capsules\" / name / \"capsule.html\"\n     56 |     if not html_file.exists():\n >   57 |         raise HTTPException(status_code=404, detail=\"Capsule not found\")\n     58 |     return HTMLResponse(content=html_file.read_text(encoding=\"utf-8\"))\n     59 | \n     60 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 58,
+      "col": 11,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "call",
+      "snippet": "     55 |     html_file = CAPSULE_DIR / \"capsules\" / name / \"capsule.html\"\n     56 |     if not html_file.exists():\n     57 |         raise HTTPException(status_code=404, detail=\"Capsule not found\")\n >   58 |     return HTMLResponse(content=html_file.read_text(encoding=\"utf-8\"))\n     59 | \n     60 | \n     61 | @app.get(\"/\", response_class=HTMLResponse)",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 65,
+      "col": 15,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "call",
+      "snippet": "     62 | async def serve_index():\n     63 |     idx_file = CAPSULE_DIR / \"index.html\"\n     64 |     if idx_file.exists():\n >   65 |         return HTMLResponse(content=idx_file.read_text(encoding=\"utf-8\"))\n     66 |     return HTMLResponse(\"<html><body><h1>Exitwise</h1><p>No capsules found.</p></body></html>\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "api/index.py",
+      "line": 66,
+      "col": 11,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "call",
+      "snippet": "     63 |     idx_file = CAPSULE_DIR / \"index.html\"\n     64 |     if idx_file.exists():\n     65 |         return HTMLResponse(content=idx_file.read_text(encoding=\"utf-8\"))\n >   66 |     return HTMLResponse(\"<html><body><h1>Exitwise</h1><p>No capsules found.</p></body></html>\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 5,
+      "col": 0,
+      "symbol": "fastapi.FastAPI",
+      "kind": "import_from",
+      "snippet": "      2 | \n      3 | import json\n      4 | from pathlib import Path\n >    5 | from fastapi import FastAPI, HTTPException\n      6 | from fastapi.responses import HTMLResponse, JSONResponse\n      7 | from fastapi.staticfiles import StaticFiles\n      8 | import uvicorn",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 5,
+      "col": 0,
+      "symbol": "fastapi.HTTPException",
+      "kind": "import_from",
+      "snippet": "      2 | \n      3 | import json\n      4 | from pathlib import Path\n >    5 | from fastapi import FastAPI, HTTPException\n      6 | from fastapi.responses import HTMLResponse, JSONResponse\n      7 | from fastapi.staticfiles import StaticFiles\n      8 | import uvicorn",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 6,
+      "col": 0,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "import_from",
+      "snippet": "      3 | import json\n      4 | from pathlib import Path\n      5 | from fastapi import FastAPI, HTTPException\n >    6 | from fastapi.responses import HTMLResponse, JSONResponse\n      7 | from fastapi.staticfiles import StaticFiles\n      8 | import uvicorn\n      9 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 6,
+      "col": 0,
+      "symbol": "fastapi.responses.JSONResponse",
+      "kind": "import_from",
+      "snippet": "      3 | import json\n      4 | from pathlib import Path\n      5 | from fastapi import FastAPI, HTTPException\n >    6 | from fastapi.responses import HTMLResponse, JSONResponse\n      7 | from fastapi.staticfiles import StaticFiles\n      8 | import uvicorn\n      9 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 7,
+      "col": 0,
+      "symbol": "fastapi.staticfiles.StaticFiles",
+      "kind": "import_from",
+      "snippet": "      4 | from pathlib import Path\n      5 | from fastapi import FastAPI, HTTPException\n      6 | from fastapi.responses import HTMLResponse, JSONResponse\n >    7 | from fastapi.staticfiles import StaticFiles\n      8 | import uvicorn\n      9 | \n     10 | app = FastAPI(title=\"Exitwise Local Dashboard\", version=\"0.1.0\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 10,
+      "col": 6,
+      "symbol": "fastapi.FastAPI",
+      "kind": "call",
+      "snippet": "      7 | from fastapi.staticfiles import StaticFiles\n      8 | import uvicorn\n      9 | \n >   10 | app = FastAPI(title=\"Exitwise Local Dashboard\", version=\"0.1.0\")\n     11 | \n     12 | CAPSULE_DIR = Path(\"exitwise-output\")\n     13 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 44,
+      "col": 14,
+      "symbol": "fastapi.HTTPException",
+      "kind": "call",
+      "snippet": "     41 |     \"\"\"Retrieve full JSON for a specific dependency capsule.\"\"\"\n     42 |     cap_json = CAPSULE_DIR / \"capsules\" / name / \"capsule.json\"\n     43 |     if not cap_json.exists():\n >   44 |         raise HTTPException(status_code=404, detail=\"Capsule not found\")\n     45 |     return json.loads(cap_json.read_text(encoding=\"utf-8\"))\n     46 | \n     47 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 53,
+      "col": 14,
+      "symbol": "fastapi.HTTPException",
+      "kind": "call",
+      "snippet": "     50 |     \"\"\"Serve self-contained HTML for a capsule.\"\"\"\n     51 |     html_file = CAPSULE_DIR / \"capsules\" / name / \"capsule.html\"\n     52 |     if not html_file.exists():\n >   53 |         raise HTTPException(status_code=404, detail=\"Capsule HTML not found\")\n     54 |     return HTMLResponse(content=html_file.read_text(encoding=\"utf-8\"))\n     55 | \n     56 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 54,
+      "col": 11,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "call",
+      "snippet": "     51 |     html_file = CAPSULE_DIR / \"capsules\" / name / \"capsule.html\"\n     52 |     if not html_file.exists():\n     53 |         raise HTTPException(status_code=404, detail=\"Capsule HTML not found\")\n >   54 |     return HTMLResponse(content=html_file.read_text(encoding=\"utf-8\"))\n     55 | \n     56 | \n     57 | @app.get(\"/\", response_class=HTMLResponse)",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 62,
+      "col": 15,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "call",
+      "snippet": "     59 |     \"\"\"Serve the root index.html.\"\"\"\n     60 |     idx_file = CAPSULE_DIR / \"index.html\"\n     61 |     if idx_file.exists():\n >   62 |         return HTMLResponse(content=idx_file.read_text(encoding=\"utf-8\"))\n     63 |     return HTMLResponse(\n     64 |         \"<html><body style='background:#09090b;color:#fafafa;padding:40px;font-family:sans-serif;'>\"\n     65 |         \"<h1>Exitwise Dashboard</h1>\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 63,
+      "col": 11,
+      "symbol": "fastapi.responses.HTMLResponse",
+      "kind": "call",
+      "snippet": "     60 |     idx_file = CAPSULE_DIR / \"index.html\"\n     61 |     if idx_file.exists():\n     62 |         return HTMLResponse(content=idx_file.read_text(encoding=\"utf-8\"))\n >   63 |     return HTMLResponse(\n     64 |         \"<html><body style='background:#09090b;color:#fafafa;padding:40px;font-family:sans-serif;'>\"\n     65 |         \"<h1>Exitwise Dashboard</h1>\"\n     66 |         \"<p>No capsules found. Run <code>exitwise run &lt;repo&gt;</code> first to generate capsules.</p>\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/web/server.py",
+      "line": 79,
+      "col": 31,
+      "symbol": "fastapi.staticfiles.StaticFiles",
+      "kind": "call",
+      "snippet": "     76 | \n     77 |     caps_static = CAPSULE_DIR / \"capsules\"\n     78 |     if caps_static.is_dir():\n >   79 |         app.mount(\"/capsules\", StaticFiles(directory=str(caps_static)), name=\"capsules\")\n     80 | \n     81 |     print(f\"Starting Exitwise Dashboard at http://127.0.0.1:{port}\")\n     82 |     uvicorn.run(app, host=\"127.0.0.1\", port=port, log_level=\"info\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 33,
+      "col": 0,
+      "symbol": "fastapi",
+      "kind": "template_or_config_ref",
+      "snippet": "     30 |     \"packaging>=24.0\",\n     31 |     \"jinja2>=3.1.0\",\n     32 |     \"google-genai>=0.1.0\",\n >   33 |     \"fastapi>=0.110.0\",\n     34 |     \"uvicorn>=0.29.0\",\n     35 | ]\n     36 | ",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": null,
+  "replacement_candidates": [],
+  "migration_steps": [],
+  "patch": null,
+  "suggested_tests": [],
+  "executed_test_results": [],
+  "compatibility_gaps": [],
+  "open_concerns": [
+    {
+      "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 27,
+    "verified_by_execution_count": 0,
+    "ai_generated_count": 2,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 29
+  },
+  "overall_verdict": "NOT EXECUTED"
+}

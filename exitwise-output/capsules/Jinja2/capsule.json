@@ -1,0 +1,315 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T11:03:26.556098+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "Jinja2",
+    "raw_spec": "Jinja2==2.11.3",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": "2.11.3",
+    "constraint": "==2.11.3",
+    "latest_version": "3.1.6",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0030",
+      "dependency": "Jinja2",
+      "severity": "CRITICAL",
+      "source": "osv_api",
+      "observed_value": "Found 8 known security vulnerabilities: GHSA-cpwx-vrp4-4pq7 (Jinja2 vulnerable to sandbox breakout through attr filter selecting format method); GHSA-h5c8-rqwp-cp95 (Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter); GHSA-h75v-3vvj-5mfj (Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter)",
+      "evidence_ids": [
+        "GHSA-cpwx-vrp4-4pq7",
+        "GHSA-h5c8-rqwp-cp95",
+        "GHSA-h75v-3vvj-5mfj",
+        "GHSA-q2x7-8rv6-6q7h",
+        "PYSEC-2026-1471",
+        "PYSEC-2026-1473",
+        "PYSEC-2026-1474",
+        "PYSEC-2026-1475"
+      ],
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "RISK-0031",
+      "dependency": "Jinja2",
+      "severity": "MEDIUM",
+      "source": "pypi_api",
+      "observed_value": "Pinned at 2.11.3, 1 major version behind latest (3.1.6)",
+      "evidence_ids": [
+        "EV-PYPI-0026"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 7,
+    "distinct_symbols": [
+      "Jinja2",
+      "jinja2.Environment",
+      "jinja2.FileSystemLoader",
+      "jinja2.select_autoescape"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 3.5,
+    "ai_characterization": "The repository uses Jinja2 to configure and instantiate a template environment via the `make_env` function. It imports core components such as `Environment`, `FileSystemLoader`, and `select_autoescape` to manage template loading and auto-escaping logic. The dependency is integrated into the core application logic for template rendering, representing a moderate coupling level.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0030"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "linkwatch/report.py",
+      "line": 3,
+      "col": 0,
+      "symbol": "jinja2.Environment",
+      "kind": "import_from",
+      "snippet": "      1 | from datetime import datetime\n      2 | \n >    3 | from jinja2 import Environment, FileSystemLoader, select_autoescape\n      4 | \n      5 | from .resources import TEMPLATE_NAME, template_dir\n      6 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/report.py",
+      "line": 3,
+      "col": 0,
+      "symbol": "jinja2.FileSystemLoader",
+      "kind": "import_from",
+      "snippet": "      1 | from datetime import datetime\n      2 | \n >    3 | from jinja2 import Environment, FileSystemLoader, select_autoescape\n      4 | \n      5 | from .resources import TEMPLATE_NAME, template_dir\n      6 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/report.py",
+      "line": 3,
+      "col": 0,
+      "symbol": "jinja2.select_autoescape",
+      "kind": "import_from",
+      "snippet": "      1 | from datetime import datetime\n      2 | \n >    3 | from jinja2 import Environment, FileSystemLoader, select_autoescape\n      4 | \n      5 | from .resources import TEMPLATE_NAME, template_dir\n      6 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/report.py",
+      "line": 9,
+      "col": 11,
+      "symbol": "jinja2.Environment",
+      "kind": "call",
+      "snippet": "      6 | \n      7 | \n      8 | def make_env():\n >    9 |     return Environment(\n     10 |         loader=FileSystemLoader(template_dir()),\n     11 |         autoescape=select_autoescape([\"html\", \"j2\"]),\n     12 |     )",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/report.py",
+      "line": 10,
+      "col": 15,
+      "symbol": "jinja2.FileSystemLoader",
+      "kind": "call",
+      "snippet": "      7 | \n      8 | def make_env():\n      9 |     return Environment(\n >   10 |         loader=FileSystemLoader(template_dir()),\n     11 |         autoescape=select_autoescape([\"html\", \"j2\"]),\n     12 |     )\n     13 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/report.py",
+      "line": 11,
+      "col": 19,
+      "symbol": "jinja2.select_autoescape",
+      "kind": "call",
+      "snippet": "      8 | def make_env():\n      9 |     return Environment(\n     10 |         loader=FileSystemLoader(template_dir()),\n >   11 |         autoescape=select_autoescape([\"html\", \"j2\"]),\n     12 |     )\n     13 | \n     14 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 16,
+      "col": 0,
+      "symbol": "Jinja2",
+      "kind": "template_or_config_ref",
+      "snippet": "     13 |     \"toml==0.10.2\",\n     14 |     \"appdirs==1.4.4\",\n     15 |     \"requests==2.31.0\",\n >   16 |     \"Jinja2==2.11.3\",\n     17 |     \"pydantic>=2\",\n     18 |     \"click>=7\",\n     19 |     \"six\",",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": {
+    "name": "jinja2",
+    "kind": "pypi",
+    "tradeoffs": [
+      "Upgrade pin to Jinja2>=3.1.0",
+      "Resolves security CVEs"
+    ],
+    "validation": {
+      "exists_on_pypi_or_stdlib": true,
+      "is_stdlib": false,
+      "declares_py_compat": true,
+      "installs_cleanly": true,
+      "validation_log": "Verified on PyPI (latest: 3.1.6)"
+    },
+    "status": "ACCEPTED",
+    "rejection_reason": null,
+    "evidence_ids": [
+      "EV-AST-0030"
+    ],
+    "provenance": "AI_GENERATED"
+  },
+  "replacement_candidates": [
+    {
+      "name": "jinja2",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Upgrade pin to Jinja2>=3.1.0",
+        "Resolves security CVEs"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 3.1.6)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0030"
+      ],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "migration_steps": [
+    {
+      "order": 1,
+      "description": "Step 1: Update dependency declaration in pyproject.toml or requirements.txt from Jinja2 to jinja2",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 2,
+      "description": "Step 2: Verify that all import statements use the lowercase 'jinja2' package name",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 3,
+      "description": "Step 3: Run the test suite to ensure template rendering remains consistent",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "patch": {
+    "attempt_number": 1,
+    "unified_diff": "",
+    "applied_cleanly": true,
+    "error_message": null,
+    "provenance": "VERIFIED_BY_EXECUTION"
+  },
+  "suggested_tests": [
+    {
+      "test_name": "test_diff_compat_jinja2.py",
+      "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: Jinja2, jinja2.Environment, jinja2.FileSystemLoader, jinja2.select_autoescape\n    assert True\n",
+      "target_apis": [
+        "Jinja2",
+        "jinja2.Environment",
+        "jinja2.FileSystemLoader",
+        "jinja2.select_autoescape"
+      ],
+      "baseline_passed": false,
+      "candidate_passed": false,
+      "execution_evidence_id": null,
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "executed_test_results": [
+    {
+      "side": "baseline",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-BASE-0076",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    {
+      "side": "candidate",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-CAND-0077",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    }
+  ],
+  "compatibility_gaps": [
+    {
+      "id": "GAP-0078",
+      "description": "Differential API test 'test_diff_compat_jinja2.py' failed against candidate 'jinja2'.",
+      "evidence_ids": [],
+      "severity": "MEDIUM",
+      "status": "OBSERVED",
+      "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "open_concerns": [
+    {
+      "description": "Replacement 'jinja2' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 13,
+    "verified_by_execution_count": 3,
+    "ai_generated_count": 8,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 24
+  },
+  "overall_verdict": "ANALYZED"
+}

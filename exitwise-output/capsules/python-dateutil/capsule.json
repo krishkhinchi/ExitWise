@@ -1,0 +1,124 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T11:05:03.610038+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "python-dateutil",
+    "raw_spec": "python-dateutil",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": null,
+    "constraint": "",
+    "latest_version": "2.9.0.post0",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0065",
+      "dependency": "python-dateutil",
+      "severity": "MEDIUM",
+      "source": "pypi_api",
+      "observed_value": "No new PyPI release in 957 days (~2.6 years, last: 2024-03-01)",
+      "evidence_ids": [
+        "EV-PYPI-0061"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 3,
+    "distinct_symbols": [
+      "dateutil.parser",
+      "python-dateutil"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 2.5,
+    "ai_characterization": "Usage characterized by AST: used across 2 file(s).",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0065"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "linkwatch/dates.py",
+      "line": 1,
+      "col": 0,
+      "symbol": "dateutil.parser",
+      "kind": "import_from",
+      "snippet": " >    1 | from dateutil import parser\n      2 | \n      3 | \n      4 | def parse_last_modified(value):",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/dates.py",
+      "line": 8,
+      "col": 15,
+      "symbol": "dateutil.parser",
+      "kind": "call",
+      "snippet": "      5 |     if not value:\n      6 |         return None\n      7 |     try:\n >    8 |         return parser.parse(value)\n      9 |     except (ValueError, OverflowError):\n     10 |         return None",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 23,
+      "col": 0,
+      "symbol": "python-dateutil",
+      "kind": "template_or_config_ref",
+      "snippet": "     20 |     \"chardet==5.2.0\",\n     21 |     \"setuptools==75.8.0\",\n     22 |     \"idna==2.7\",\n >   23 |     \"python-dateutil\",\n     24 |     \"rich\",\n     25 | ]\n     26 | ",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": null,
+  "replacement_candidates": [],
+  "migration_steps": [],
+  "patch": null,
+  "suggested_tests": [],
+  "executed_test_results": [],
+  "compatibility_gaps": [],
+  "open_concerns": [
+    {
+      "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 7,
+    "verified_by_execution_count": 0,
+    "ai_generated_count": 2,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 9
+  },
+  "overall_verdict": "NOT EXECUTED"
+}

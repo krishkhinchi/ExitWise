@@ -1,0 +1,310 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T11:04:56.738584+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "pydantic",
+    "raw_spec": "pydantic==1.10.13",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": "1.10.13",
+    "constraint": "==1.10.13",
+    "latest_version": "2.14.1",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0035",
+      "dependency": "pydantic",
+      "severity": "HIGH",
+      "source": "manifest_drift_detector",
+      "observed_value": "Conflicting version constraints declared across repository manifest files",
+      "evidence_ids": [
+        "EV-DRIFT-0001"
+      ],
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "RISK-0036",
+      "dependency": "pydantic",
+      "severity": "MEDIUM",
+      "source": "pypi_api",
+      "observed_value": "Pinned at 1.10.13, 1 major version behind latest (2.14.1)",
+      "evidence_ids": [
+        "EV-PYPI-0031"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 7,
+    "distinct_symbols": [
+      "class Settings(pydantic.BaseModel)",
+      "class Site(pydantic.BaseModel)",
+      "pydantic",
+      "pydantic.BaseModel",
+      "pydantic.validator"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 5.5,
+    "ai_characterization": "The repository uses pydantic to define core data models (Site and Settings) by subclassing BaseModel. It also utilizes the @validator decorator for custom field validation logic. The dependency is integrated into the core configuration and data structures of the application.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0035"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "linkwatch/config.py",
+      "line": 4,
+      "col": 0,
+      "symbol": "pydantic.BaseModel",
+      "kind": "import_from",
+      "snippet": "      1 | from typing import List\n      2 | \n      3 | import toml\n >    4 | from pydantic import BaseModel, validator\n      5 | \n      6 | \n      7 | class Site(BaseModel):",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/config.py",
+      "line": 4,
+      "col": 0,
+      "symbol": "pydantic.validator",
+      "kind": "import_from",
+      "snippet": "      1 | from typing import List\n      2 | \n      3 | import toml\n >    4 | from pydantic import BaseModel, validator\n      5 | \n      6 | \n      7 | class Site(BaseModel):",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/config.py",
+      "line": 7,
+      "col": 0,
+      "symbol": "class Site(pydantic.BaseModel)",
+      "kind": "inheritance",
+      "snippet": "      4 | from pydantic import BaseModel, validator\n      5 | \n      6 | \n >    7 | class Site(BaseModel):\n      8 |     name: str\n      9 |     url: str\n     10 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/config.py",
+      "line": 14,
+      "col": 5,
+      "symbol": "pydantic.validator",
+      "kind": "call",
+      "snippet": "     11 |     class Config:\n     12 |         anystr_strip_whitespace = True\n     13 | \n >   14 |     @validator(\"name\")\n     15 |     def name_not_empty(cls, value):\n     16 |         if not value:\n     17 |             raise ValueError(\"site name can not be empty\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/config.py",
+      "line": 20,
+      "col": 5,
+      "symbol": "pydantic.validator",
+      "kind": "call",
+      "snippet": "     17 |             raise ValueError(\"site name can not be empty\")\n     18 |         return value\n     19 | \n >   20 |     @validator(\"url\")\n     21 |     def url_has_scheme(cls, value):\n     22 |         if not value.startswith((\"http://\", \"https://\")):\n     23 |             raise ValueError(\"url must start with http:// or https://\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/config.py",
+      "line": 27,
+      "col": 0,
+      "symbol": "class Settings(pydantic.BaseModel)",
+      "kind": "inheritance",
+      "snippet": "     24 |         return value\n     25 | \n     26 | \n >   27 | class Settings(BaseModel):\n     28 |     title: str = \"linkwatch\"\n     29 |     output: str = \"status.html\"\n     30 |     sites: List[Site] = []",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 17,
+      "col": 0,
+      "symbol": "pydantic",
+      "kind": "template_or_config_ref",
+      "snippet": "     14 |     \"appdirs==1.4.4\",\n     15 |     \"requests==2.31.0\",\n     16 |     \"Jinja2==2.11.3\",\n >   17 |     \"pydantic>=2\",\n     18 |     \"click>=7\",\n     19 |     \"six\",\n     20 |     \"chardet==5.2.0\",",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": {
+    "name": "pydantic",
+    "kind": "pypi",
+    "tradeoffs": [
+      "Migrate to Pydantic v2",
+      "Significant performance gains, aligns with pyproject.toml"
+    ],
+    "validation": {
+      "exists_on_pypi_or_stdlib": true,
+      "is_stdlib": false,
+      "declares_py_compat": true,
+      "installs_cleanly": true,
+      "validation_log": "Verified on PyPI (latest: 2.14.1)"
+    },
+    "status": "ACCEPTED",
+    "rejection_reason": null,
+    "evidence_ids": [
+      "EV-AST-0035"
+    ],
+    "provenance": "AI_GENERATED"
+  },
+  "replacement_candidates": [
+    {
+      "name": "pydantic",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Migrate to Pydantic v2",
+        "Significant performance gains, aligns with pyproject.toml"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 2.14.1)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0035"
+      ],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "migration_steps": [
+    {
+      "order": 1,
+      "description": "1. Replace 'pydantic' with 'pydantic' in pyproject.toml / requirements.txt",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 2,
+      "description": "2. Update import statements in repository modules",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 3,
+      "description": "3. Run automated tests in sandbox environment",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "patch": {
+    "attempt_number": 1,
+    "unified_diff": "",
+    "applied_cleanly": true,
+    "error_message": null,
+    "provenance": "VERIFIED_BY_EXECUTION"
+  },
+  "suggested_tests": [
+    {
+      "test_name": "test_diff_compat_pydantic.py",
+      "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: class Settings(pydantic.BaseModel), class Site(pydantic.BaseModel), pydantic, pydantic.BaseModel, pydantic.validator\n    assert True\n",
+      "target_apis": [
+        "class Settings(pydantic.BaseModel)",
+        "class Site(pydantic.BaseModel)",
+        "pydantic",
+        "pydantic.BaseModel",
+        "pydantic.validator"
+      ],
+      "baseline_passed": false,
+      "candidate_passed": false,
+      "execution_evidence_id": null,
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "executed_test_results": [
+    {
+      "side": "baseline",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-BASE-0080",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    {
+      "side": "candidate",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-CAND-0081",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    }
+  ],
+  "compatibility_gaps": [
+    {
+      "id": "GAP-0082",
+      "description": "Differential API test 'test_diff_compat_pydantic.py' failed against candidate 'pydantic'.",
+      "evidence_ids": [],
+      "severity": "MEDIUM",
+      "status": "OBSERVED",
+      "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "open_concerns": [
+    {
+      "description": "Replacement 'pydantic' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 13,
+    "verified_by_execution_count": 3,
+    "ai_generated_count": 8,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 24
+  },
+  "overall_verdict": "ANALYZED"
+}

@@ -1,0 +1,274 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T09:59:22.843854+00:00",
+    "target_repo_url": "https://github.com/krishkhinchi/ExitWise",
+    "target_commit_sha": "a1cb6056dd74cb79bfd38cf66405e0d4ac11062f",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "click",
+    "raw_spec": "click>=8.1.0",
+    "source_manifests": [
+      "pyproject.toml"
+    ],
+    "pinned_version": null,
+    "constraint": ">=8.1.0",
+    "latest_version": "8.5.0",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 19,
+    "distinct_symbols": [
+      "click",
+      "click.argument",
+      "click.group",
+      "click.option",
+      "click.version_option"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 4.0,
+    "ai_characterization": "The dependency 'click' is used to define the CLI structure of the application, specifically through decorators like @click.group(), @click.version_option(), @click.command(), @click.argument(), and @click.option(). This represents a moderate coupling as the CLI entry point and command routing are tightly integrated with the 'click' framework.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0010"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 8,
+      "col": 0,
+      "symbol": "click",
+      "kind": "import",
+      "snippet": "      5 | import sys\n      6 | import tempfile\n      7 | from pathlib import Path\n >    8 | import click\n      9 | from rich.console import Console\n     10 | from rich.table import Table\n     11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 45,
+      "col": 1,
+      "symbol": "click.group",
+      "kind": "call",
+      "snippet": "     42 | console = Console()\n     43 | \n     44 | \n >   45 | @click.group()\n     46 | @click.version_option(package_name=\"exitwise\")\n     47 | def cli():\n     48 |     \"\"\"Exitwise: AI-assisted Dependency Exit Capsule Generator for Python.\"\"\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 46,
+      "col": 1,
+      "symbol": "click.version_option",
+      "kind": "call",
+      "snippet": "     43 | \n     44 | \n     45 | @click.group()\n >   46 | @click.version_option(package_name=\"exitwise\")\n     47 | def cli():\n     48 |     \"\"\"Exitwise: AI-assisted Dependency Exit Capsule Generator for Python.\"\"\"\n     49 |     # Enforce strict Python runtime guard (>=3.12, <3.14)",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 54,
+      "col": 1,
+      "symbol": "click.argument",
+      "kind": "call",
+      "snippet": "     51 | \n     52 | \n     53 | @cli.command()\n >   54 | @click.argument(\"target\")\n     55 | @click.option(\"--only\", help=\"Comma-separated list of dependencies to scan\")\n     56 | @click.option(\"--offline-signals\", is_flag=True, help=\"Use offline cached data for PyPI/OSV\")\n     57 | def scan(target: str, only: str | None, offline_signals: bool):",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 55,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "     52 | \n     53 | @cli.command()\n     54 | @click.argument(\"target\")\n >   55 | @click.option(\"--only\", help=\"Comma-separated list of dependencies to scan\")\n     56 | @click.option(\"--offline-signals\", is_flag=True, help=\"Use offline cached data for PyPI/OSV\")\n     57 | def scan(target: str, only: str | None, offline_signals: bool):\n     58 |     \"\"\"Stage 1: Scan repository manifests, query PyPI/OSV signals, and rank at-risk dependencies.\"\"\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 56,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "     53 | @cli.command()\n     54 | @click.argument(\"target\")\n     55 | @click.option(\"--only\", help=\"Comma-separated list of dependencies to scan\")\n >   56 | @click.option(\"--offline-signals\", is_flag=True, help=\"Use offline cached data for PyPI/OSV\")\n     57 | def scan(target: str, only: str | None, offline_signals: bool):\n     58 |     \"\"\"Stage 1: Scan repository manifests, query PyPI/OSV signals, and rank at-risk dependencies.\"\"\"\n     59 |     with tempfile.TemporaryDirectory(prefix=\"exitwise_scan_\") as tmp_dir:",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 137,
+      "col": 1,
+      "symbol": "click.argument",
+      "kind": "call",
+      "snippet": "    134 | \n    135 | \n    136 | @cli.command()\n >  137 | @click.argument(\"target\")\n    138 | @click.option(\"--only\", help=\"Filter target dependencies\")\n    139 | def usage(target: str, only: str | None):\n    140 |     \"\"\"Stage 2: Map AST usage locations, dynamic patching, and coupling scores.\"\"\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 138,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    135 | \n    136 | @cli.command()\n    137 | @click.argument(\"target\")\n >  138 | @click.option(\"--only\", help=\"Filter target dependencies\")\n    139 | def usage(target: str, only: str | None):\n    140 |     \"\"\"Stage 2: Map AST usage locations, dynamic patching, and coupling scores.\"\"\"\n    141 |     with tempfile.TemporaryDirectory(prefix=\"exitwise_usage_\") as tmp_dir:",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 193,
+      "col": 1,
+      "symbol": "click.argument",
+      "kind": "call",
+      "snippet": "    190 | \n    191 | \n    192 | @cli.command()\n >  193 | @click.argument(\"target\")\n    194 | @click.option(\"--only\", help=\"Filter dependencies to process (comma-separated)\")\n    195 | @click.option(\"--model\", default=DEFAULT_GEMMA_MODEL, help=\"Gemma 4 model ID\")\n    196 | @click.option(\"--python-ver\", \"python_ver\", default=\"both\", help=\"Python matrix: 3.12, 3.13, or both\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 194,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    191 | \n    192 | @cli.command()\n    193 | @click.argument(\"target\")\n >  194 | @click.option(\"--only\", help=\"Filter dependencies to process (comma-separated)\")\n    195 | @click.option(\"--model\", default=DEFAULT_GEMMA_MODEL, help=\"Gemma 4 model ID\")\n    196 | @click.option(\"--python-ver\", \"python_ver\", default=\"both\", help=\"Python matrix: 3.12, 3.13, or both\")\n    197 | @click.option(\"--offline-signals\", is_flag=True, help=\"Disable network calls to PyPI/OSV\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 195,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    192 | @cli.command()\n    193 | @click.argument(\"target\")\n    194 | @click.option(\"--only\", help=\"Filter dependencies to process (comma-separated)\")\n >  195 | @click.option(\"--model\", default=DEFAULT_GEMMA_MODEL, help=\"Gemma 4 model ID\")\n    196 | @click.option(\"--python-ver\", \"python_ver\", default=\"both\", help=\"Python matrix: 3.12, 3.13, or both\")\n    197 | @click.option(\"--offline-signals\", is_flag=True, help=\"Disable network calls to PyPI/OSV\")\n    198 | @click.option(\"--out\", \"out_dir\", default=str(DEFAULT_OUTPUT_DIR), help=\"Output directory for capsules\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 196,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    193 | @click.argument(\"target\")\n    194 | @click.option(\"--only\", help=\"Filter dependencies to process (comma-separated)\")\n    195 | @click.option(\"--model\", default=DEFAULT_GEMMA_MODEL, help=\"Gemma 4 model ID\")\n >  196 | @click.option(\"--python-ver\", \"python_ver\", default=\"both\", help=\"Python matrix: 3.12, 3.13, or both\")\n    197 | @click.option(\"--offline-signals\", is_flag=True, help=\"Disable network calls to PyPI/OSV\")\n    198 | @click.option(\"--out\", \"out_dir\", default=str(DEFAULT_OUTPUT_DIR), help=\"Output directory for capsules\")\n    199 | @click.option(\"--no-cache\", is_flag=True, default=True, help=\"Bypass cached AI responses\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 197,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    194 | @click.option(\"--only\", help=\"Filter dependencies to process (comma-separated)\")\n    195 | @click.option(\"--model\", default=DEFAULT_GEMMA_MODEL, help=\"Gemma 4 model ID\")\n    196 | @click.option(\"--python-ver\", \"python_ver\", default=\"both\", help=\"Python matrix: 3.12, 3.13, or both\")\n >  197 | @click.option(\"--offline-signals\", is_flag=True, help=\"Disable network calls to PyPI/OSV\")\n    198 | @click.option(\"--out\", \"out_dir\", default=str(DEFAULT_OUTPUT_DIR), help=\"Output directory for capsules\")\n    199 | @click.option(\"--no-cache\", is_flag=True, default=True, help=\"Bypass cached AI responses\")\n    200 | def run(target: str, only: str | None, model: str, python_ver: str, offline_signals: bool, out_dir: str, no_cache: bool):",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 198,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    195 | @click.option(\"--model\", default=DEFAULT_GEMMA_MODEL, help=\"Gemma 4 model ID\")\n    196 | @click.option(\"--python-ver\", \"python_ver\", default=\"both\", help=\"Python matrix: 3.12, 3.13, or both\")\n    197 | @click.option(\"--offline-signals\", is_flag=True, help=\"Disable network calls to PyPI/OSV\")\n >  198 | @click.option(\"--out\", \"out_dir\", default=str(DEFAULT_OUTPUT_DIR), help=\"Output directory for capsules\")\n    199 | @click.option(\"--no-cache\", is_flag=True, default=True, help=\"Bypass cached AI responses\")\n    200 | def run(target: str, only: str | None, model: str, python_ver: str, offline_signals: bool, out_dir: str, no_cache: bool):\n    201 |     \"\"\"Execute full Exitwise resilience pipeline and generate Dependency Exit Capsules.\"\"\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 199,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    196 | @click.option(\"--python-ver\", \"python_ver\", default=\"both\", help=\"Python matrix: 3.12, 3.13, or both\")\n    197 | @click.option(\"--offline-signals\", is_flag=True, help=\"Disable network calls to PyPI/OSV\")\n    198 | @click.option(\"--out\", \"out_dir\", default=str(DEFAULT_OUTPUT_DIR), help=\"Output directory for capsules\")\n >  199 | @click.option(\"--no-cache\", is_flag=True, default=True, help=\"Bypass cached AI responses\")\n    200 | def run(target: str, only: str | None, model: str, python_ver: str, offline_signals: bool, out_dir: str, no_cache: bool):\n    201 |     \"\"\"Execute full Exitwise resilience pipeline and generate Dependency Exit Capsules.\"\"\"\n    202 |     console.print(",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 553,
+      "col": 1,
+      "symbol": "click.argument",
+      "kind": "call",
+      "snippet": "    550 | \n    551 | \n    552 | @cli.command()\n >  553 | @click.argument(\"capsule_dir\")\n    554 | def verify(capsule_dir: str):\n    555 |     \"\"\"Verify SHA-256 manifest integrity and reproduce test execution for a capsule.\"\"\"\n    556 |     c_path = Path(capsule_dir)",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 569,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    566 | \n    567 | \n    568 | @cli.command()\n >  569 | @click.option(\"--port\", default=8000, help=\"Web dashboard server port\")\n    570 | @click.option(\"--dir\", \"out_dir\", default=str(DEFAULT_OUTPUT_DIR), help=\"Capsule output directory\")\n    571 | def dashboard(port: int, out_dir: str):\n    572 |     \"\"\"Start local web dashboard server for live stage progress and capsule browsing.\"\"\"",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 570,
+      "col": 1,
+      "symbol": "click.option",
+      "kind": "call",
+      "snippet": "    567 | \n    568 | @cli.command()\n    569 | @click.option(\"--port\", default=8000, help=\"Web dashboard server port\")\n >  570 | @click.option(\"--dir\", \"out_dir\", default=str(DEFAULT_OUTPUT_DIR), help=\"Capsule output directory\")\n    571 | def dashboard(port: int, out_dir: str):\n    572 |     \"\"\"Start local web dashboard server for live stage progress and capsule browsing.\"\"\"\n    573 |     try:",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 26,
+      "col": 0,
+      "symbol": "click",
+      "kind": "template_or_config_ref",
+      "snippet": "     23 |     \"Topic :: Software Development :: Testing\",\n     24 | ]\n     25 | dependencies = [\n >   26 |     \"click>=8.1.0\",\n     27 |     \"rich>=13.7.0\",\n     28 |     \"pydantic>=2.6.0\",\n     29 |     \"httpx>=0.27.0\",",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": null,
+  "replacement_candidates": [],
+  "migration_steps": [],
+  "patch": null,
+  "suggested_tests": [],
+  "executed_test_results": [],
+  "compatibility_gaps": [],
+  "open_concerns": [
+    {
+      "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 22,
+    "verified_by_execution_count": 0,
+    "ai_generated_count": 2,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 24
+  },
+  "overall_verdict": "NOT EXECUTED"
+}

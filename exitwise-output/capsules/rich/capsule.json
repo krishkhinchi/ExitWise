@@ -1,0 +1,257 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T09:59:43.116585+00:00",
+    "target_repo_url": "https://github.com/krishkhinchi/ExitWise",
+    "target_commit_sha": "a1cb6056dd74cb79bfd38cf66405e0d4ac11062f",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "rich",
+    "raw_spec": "rich>=13.7.0",
+    "source_manifests": [
+      "pyproject.toml"
+    ],
+    "pinned_version": null,
+    "constraint": ">=13.7.0",
+    "latest_version": "15.0.0",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 17,
+    "distinct_symbols": [
+      "rich",
+      "rich.console.Console",
+      "rich.progress.BarColumn",
+      "rich.progress.Progress",
+      "rich.progress.SpinnerColumn",
+      "rich.progress.TextColumn",
+      "rich.progress.TimeElapsedColumn",
+      "rich.table.Table"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 4.0,
+    "ai_characterization": "The dependency 'rich' is used for terminal UI components, specifically importing Console, Table, Progress, and various progress bar columns. The usage is limited to standard imports and the instantiation of a Console object. No deep subclassing or monkey patching is observed in the provided snippets.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0015"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 9,
+      "col": 0,
+      "symbol": "rich.console.Console",
+      "kind": "import_from",
+      "snippet": "      6 | import tempfile\n      7 | from pathlib import Path\n      8 | import click\n >    9 | from rich.console import Console\n     10 | from rich.table import Table\n     11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn\n     12 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 10,
+      "col": 0,
+      "symbol": "rich.table.Table",
+      "kind": "import_from",
+      "snippet": "      7 | from pathlib import Path\n      8 | import click\n      9 | from rich.console import Console\n >   10 | from rich.table import Table\n     11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn\n     12 | \n     13 | from exitwise.guard import check_python_version",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 11,
+      "col": 0,
+      "symbol": "rich.progress.Progress",
+      "kind": "import_from",
+      "snippet": "      8 | import click\n      9 | from rich.console import Console\n     10 | from rich.table import Table\n >   11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn\n     12 | \n     13 | from exitwise.guard import check_python_version\n     14 | from exitwise.config import DEFAULT_GEMMA_MODEL, DEFAULT_OUTPUT_DIR",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 11,
+      "col": 0,
+      "symbol": "rich.progress.SpinnerColumn",
+      "kind": "import_from",
+      "snippet": "      8 | import click\n      9 | from rich.console import Console\n     10 | from rich.table import Table\n >   11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn\n     12 | \n     13 | from exitwise.guard import check_python_version\n     14 | from exitwise.config import DEFAULT_GEMMA_MODEL, DEFAULT_OUTPUT_DIR",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 11,
+      "col": 0,
+      "symbol": "rich.progress.TextColumn",
+      "kind": "import_from",
+      "snippet": "      8 | import click\n      9 | from rich.console import Console\n     10 | from rich.table import Table\n >   11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn\n     12 | \n     13 | from exitwise.guard import check_python_version\n     14 | from exitwise.config import DEFAULT_GEMMA_MODEL, DEFAULT_OUTPUT_DIR",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 11,
+      "col": 0,
+      "symbol": "rich.progress.BarColumn",
+      "kind": "import_from",
+      "snippet": "      8 | import click\n      9 | from rich.console import Console\n     10 | from rich.table import Table\n >   11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn\n     12 | \n     13 | from exitwise.guard import check_python_version\n     14 | from exitwise.config import DEFAULT_GEMMA_MODEL, DEFAULT_OUTPUT_DIR",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 11,
+      "col": 0,
+      "symbol": "rich.progress.TimeElapsedColumn",
+      "kind": "import_from",
+      "snippet": "      8 | import click\n      9 | from rich.console import Console\n     10 | from rich.table import Table\n >   11 | from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn\n     12 | \n     13 | from exitwise.guard import check_python_version\n     14 | from exitwise.config import DEFAULT_GEMMA_MODEL, DEFAULT_OUTPUT_DIR",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 42,
+      "col": 10,
+      "symbol": "rich.console.Console",
+      "kind": "call",
+      "snippet": "     39 | from exitwise.capsule.verify import verify_capsule_directory, write_manifest_and_scripts\n     40 | from exitwise.models import DependencyRecord, MigrationStep, Provenance\n     41 | \n >   42 | console = Console()\n     43 | \n     44 | \n     45 | @click.group()",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 75,
+      "col": 16,
+      "symbol": "rich.table.Table",
+      "kind": "call",
+      "snippet": "     72 |         # Filter by --only if provided\n     73 |         target_names = [x.strip().lower() for x in only.split(\",\")] if only else None\n     74 | \n >   75 |         table = Table(title=f\"Exitwise Risk Scan: {target}\", header_style=\"bold cyan\")\n     76 |         table.add_column(\"Dependency\", style=\"bold\")\n     77 |         table.add_column(\"Pinned\", style=\"dim\")\n     78 |         table.add_column(\"Latest PyPI\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 153,
+      "col": 16,
+      "symbol": "rich.table.Table",
+      "kind": "call",
+      "snippet": "    150 |         target_names = [x.strip().lower() for x in only.split(\",\")] if only else None\n    151 |         seen_deps = set()\n    152 | \n >  153 |         table = Table(title=\"Dependency Usage & Coupling Mapping\", header_style=\"bold magenta\")\n    154 |         table.add_column(\"Dependency\", style=\"bold\")\n    155 |         table.add_column(\"Files Touched\", justify=\"right\")\n    156 |         table.add_column(\"Occurrences\", justify=\"right\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 241,
+      "col": 13,
+      "symbol": "rich.progress.Progress",
+      "kind": "call",
+      "snippet": "    238 |         all_capsules = []\n    239 |         ev_counter = 1\n    240 | \n >  241 |         with Progress(\n    242 |             SpinnerColumn(),\n    243 |             TextColumn(\"[progress.description]{task.description}\"),\n    244 |             BarColumn(),",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 242,
+      "col": 12,
+      "symbol": "rich.progress.SpinnerColumn",
+      "kind": "call",
+      "snippet": "    239 |         ev_counter = 1\n    240 | \n    241 |         with Progress(\n >  242 |             SpinnerColumn(),\n    243 |             TextColumn(\"[progress.description]{task.description}\"),\n    244 |             BarColumn(),\n    245 |             TimeElapsedColumn(),",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 243,
+      "col": 12,
+      "symbol": "rich.progress.TextColumn",
+      "kind": "call",
+      "snippet": "    240 | \n    241 |         with Progress(\n    242 |             SpinnerColumn(),\n >  243 |             TextColumn(\"[progress.description]{task.description}\"),\n    244 |             BarColumn(),\n    245 |             TimeElapsedColumn(),\n    246 |             console=console,",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 244,
+      "col": 12,
+      "symbol": "rich.progress.BarColumn",
+      "kind": "call",
+      "snippet": "    241 |         with Progress(\n    242 |             SpinnerColumn(),\n    243 |             TextColumn(\"[progress.description]{task.description}\"),\n >  244 |             BarColumn(),\n    245 |             TimeElapsedColumn(),\n    246 |             console=console,\n    247 |         ) as progress:",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 245,
+      "col": 12,
+      "symbol": "rich.progress.TimeElapsedColumn",
+      "kind": "call",
+      "snippet": "    242 |             SpinnerColumn(),\n    243 |             TextColumn(\"[progress.description]{task.description}\"),\n    244 |             BarColumn(),\n >  245 |             TimeElapsedColumn(),\n    246 |             console=console,\n    247 |         ) as progress:\n    248 |             main_task = progress.add_task(\"[cyan]Processing dependencies...\", total=len(by_dep))",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "src/exitwise/cli.py",
+      "line": 526,
+      "col": 24,
+      "symbol": "rich.table.Table",
+      "kind": "call",
+      "snippet": "    523 |         console.print(f\"Browse results via: [cyan]{out_path.resolve() / 'index.html'}[/cyan]\\n\")\n    524 | \n    525 |         # Summary Table\n >  526 |         summary_table = Table(title=\"Exitwise Run Summary\", header_style=\"bold cyan\")\n    527 |         summary_table.add_column(\"Dependency\", style=\"bold\")\n    528 |         summary_table.add_column(\"Proposed Replacement\")\n    529 |         summary_table.add_column(\"Overall Verdict\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 27,
+      "col": 0,
+      "symbol": "rich",
+      "kind": "template_or_config_ref",
+      "snippet": "     24 | ]\n     25 | dependencies = [\n     26 |     \"click>=8.1.0\",\n >   27 |     \"rich>=13.7.0\",\n     28 |     \"pydantic>=2.6.0\",\n     29 |     \"httpx>=0.27.0\",\n     30 |     \"packaging>=24.0\",",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": null,
+  "replacement_candidates": [],
+  "migration_steps": [],
+  "patch": null,
+  "suggested_tests": [],
+  "executed_test_results": [],
+  "compatibility_gaps": [],
+  "open_concerns": [
+    {
+      "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 20,
+    "verified_by_execution_count": 0,
+    "ai_generated_count": 2,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 22
+  },
+  "overall_verdict": "NOT EXECUTED"
+}

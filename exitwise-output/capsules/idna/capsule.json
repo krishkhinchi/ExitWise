@@ -3,9 +3,9 @@
     "schema_version": "1.0.0",
     "tool_name": "Exitwise",
     "tool_version": "0.1.0",
-    "generated_at": "2026-10-15T07:16:55.334198+00:00",
-    "target_repo_url": "C:\\Users\\KRISH\\AppData\\Local\\Temp\\test_linkwatch",
-    "target_commit_sha": "d912307480fcacc57bb07b5de486f57edef5767f",
+    "generated_at": "2026-10-15T11:04:05.669653+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
     "tested_python_versions": [
       "3.13"
     ],
@@ -27,7 +27,7 @@
   },
   "risk_indicators": [
     {
-      "id": "RISK-0010",
+      "id": "RISK-0060",
       "dependency": "idna",
       "severity": "CRITICAL",
       "source": "osv_api",
@@ -41,13 +41,13 @@
       "provenance": "OBSERVED"
     },
     {
-      "id": "RISK-0011",
+      "id": "RISK-0061",
       "dependency": "idna",
       "severity": "MEDIUM",
       "source": "pypi_api",
       "observed_value": "Pinned at 2.7, 1 major version behind latest (3.20)",
       "evidence_ids": [
-        "EV-PYPI-0006"
+        "EV-PYPI-0056"
       ],
       "provenance": "OBSERVED"
     }
@@ -61,9 +61,9 @@
     "is_monkey_patched": false,
     "is_test_only": false,
     "coupling_score": 1.2,
-    "ai_characterization": "The dependency 'idna' is listed as a direct requirement in the project's dependency specification file (likely requirements.txt or pyproject.toml), but there are no functional code implementations or direct API calls observed in the provided snippets. The coupling is limited to version pinning.",
+    "ai_characterization": "The dependency 'idna' is listed as a requirement in the project's dependency specification file (likely requirements.txt or pyproject.toml), but there is no evidence of direct code-level interaction or functional calls to the library within the provided snippets. The coupling is limited to environment configuration.",
     "ai_characterization_evidence_ids": [
-      "EV-AST-0010"
+      "EV-AST-0060"
     ],
     "provenance": "OBSERVED"
   },

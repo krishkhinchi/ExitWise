@@ -4,9 +4,907 @@
       "schema_version": "1.0.0",
       "tool_name": "Exitwise",
       "tool_version": "0.1.0",
-      "generated_at": "2026-10-15T07:16:33.042459+00:00",
-      "target_repo_url": "C:\\Users\\KRISH\\AppData\\Local\\Temp\\test_linkwatch",
-      "target_commit_sha": "d912307480fcacc57bb07b5de486f57edef5767f",
+      "generated_at": "2026-10-15T10:24:55.502686+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "setuptools",
+      "raw_spec": "setuptools==75.8.0",
+      "source_manifests": [
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "pinned_version": "75.8.0",
+      "constraint": "==75.8.0",
+      "latest_version": "84.0.0",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0055",
+        "dependency": "setuptools",
+        "severity": "CRITICAL",
+        "source": "osv_api",
+        "observed_value": "Found 4 known security vulnerabilities: GHSA-5rjg-fvgr-3xxf (setuptools has a path traversal vulnerability in PackageIndex.download that leads to Arbitrary File Write); GHSA-h35f-9h28-mq5c (setuptools: MANIFEST.in exclusion bypass in sdist via Unicode normalization collision (NFC/NFD) on macOS APFS/HFS+); PYSEC-2025-49 (setuptools is a package that allows users to download, build, install, upgrade, and uninstall Python packages. A path tr)",
+        "evidence_ids": [
+          "GHSA-5rjg-fvgr-3xxf",
+          "GHSA-h35f-9h28-mq5c",
+          "PYSEC-2025-49",
+          "PYSEC-2026-3447"
+        ],
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "RISK-0056",
+        "dependency": "setuptools",
+        "severity": "HIGH",
+        "source": "pypi_api",
+        "observed_value": "Pinned at 75.8.0, 9 major versions behind latest (84.0.0)",
+        "evidence_ids": [
+          "EV-PYPI-0051"
+        ],
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "RISK-0057",
+        "dependency": "setuptools",
+        "severity": "MEDIUM",
+        "source": "manifest_analyzer",
+        "observed_value": "Build/packaging tool 'setuptools' pinned directly in runtime dependencies instead of build-system",
+        "evidence_ids": [
+          "EV-PYPI-0051"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 2,
+      "total_occurrences": 7,
+      "distinct_symbols": [
+        "pkg_resources",
+        "pkg_resources.resource_filename",
+        "setuptools"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 3.0,
+      "ai_characterization": "The dependency 'setuptools' is used primarily for build-system configuration and project metadata in pyproject.toml and requirements.txt, rather than being imported and used within the application logic itself. The use of 'pkg_resources' (part of setuptools) is present in the code, but it'io' is used for resource management via 'resource_filename'.",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0055"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "linkwatch/resources.py",
+        "line": 1,
+        "col": 0,
+        "symbol": "pkg_resources",
+        "kind": "import",
+        "snippet": " >    1 | import pkg_resources\n      2 | \n      3 | TEMPLATE_NAME = \"status.html.j2\"\n      4 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/resources.py",
+        "line": 7,
+        "col": 11,
+        "symbol": "pkg_resources.resource_filename",
+        "kind": "call",
+        "snippet": "      4 | \n      5 | \n      6 | def template_dir():\n >    7 |     return pkg_resources.resource_filename(\"linkwatch\", \"templates\")",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 2,
+        "col": 0,
+        "symbol": "setuptools",
+        "kind": "template_or_config_ref",
+        "snippet": "      1 | [build-system]\n >    2 | requires = [\"setuptools>=61\"]\n      3 | build-backend = \"setuptools.build_meta\"\n      4 | \n      5 | [project]",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 3,
+        "col": 0,
+        "symbol": "setuptools",
+        "kind": "template_or_config_ref",
+        "snippet": "      1 | [build-system]\n      2 | requires = [\"setuptools>=61\"]\n >    3 | build-backend = \"setuptools.build_meta\"\n      4 | \n      5 | [project]\n      6 | name = \"linkwatch\"",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 21,
+        "col": 0,
+        "symbol": "setuptools",
+        "kind": "template_or_config_ref",
+        "snippet": "     18 |     \"click>=7\",\n     19 |     \"six\",\n     20 |     \"chardet==5.2.0\",\n >   21 |     \"setuptools==75.8.0\",\n     22 |     \"idna==2.7\",\n     23 |     \"python-dateutil\",\n     24 |     \"rich\",",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 30,
+        "col": 0,
+        "symbol": "setuptools",
+        "kind": "template_or_config_ref",
+        "snippet": "     27 | [project.scripts]\n     28 | linkwatch = \"linkwatch.cli:cli\"\n     29 | \n >   30 | [tool.setuptools]\n     31 | packages = [\"linkwatch\"]\n     32 | \n     33 | [tool.setuptools.package-data]",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 33,
+        "col": 0,
+        "symbol": "setuptools",
+        "kind": "template_or_config_ref",
+        "snippet": "     30 | [tool.setuptools]\n     31 | packages = [\"linkwatch\"]\n     32 | \n >   33 | [tool.setuptools.package-data]\n     34 | linkwatch = [\"templates/*.j2\"]\n     35 | \n     36 | [tool.pytest.ini_options]",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": null,
+    "replacement_candidates": [],
+    "migration_steps": [],
+    "patch": null,
+    "suggested_tests": [],
+    "executed_test_results": [],
+    "compatibility_gaps": [],
+    "open_concerns": [
+      {
+        "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 13,
+      "verified_by_execution_count": 0,
+      "ai_generated_count": 2,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 15
+    },
+    "overall_verdict": "NOT EXECUTED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:02:30.253474+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "nose",
+      "raw_spec": "nose==1.3.7",
+      "source_manifests": [
+        "requirements-dev.txt"
+      ],
+      "pinned_version": "1.3.7",
+      "constraint": "==1.3.7",
+      "latest_version": "1.3.7",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0010",
+        "dependency": "nose",
+        "severity": "CRITICAL",
+        "source": "python_compat_evaluator",
+        "observed_value": "Incompatible with target Python runtimes: nose relies on the 'imp' module removed in Python 3.12 and fails to import/run.",
+        "evidence_ids": [
+          "EV-COMPAT-0009"
+        ],
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "RISK-0011",
+        "dependency": "nose",
+        "severity": "HIGH",
+        "source": "pypi_api",
+        "observed_value": "No new PyPI release in 4153 days (~11.4 years, last: 2015-06-02)",
+        "evidence_ids": [
+          "EV-PYPI-0006"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 1,
+      "total_occurrences": 2,
+      "distinct_symbols": [
+        "nose"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 1.2,
+      "ai_characterization": "The dependency 'nose' is used exclusively as a command-line tool within a Makefile to execute tests via the 'nosetests' command. There is no evidence of direct Python module imports or programmatic usage within the application code.",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0010"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "Makefile",
+        "line": 4,
+        "col": 0,
+        "symbol": "nose",
+        "kind": "template_or_config_ref",
+        "snippet": "      1 | IMAGE ?= linkwatch\n      2 | PYTHON ?= python3.12\n      3 | \n >    4 | .PHONY: setup test test-nose docker-build docker-test\n      5 | \n      6 | setup:\n      7 | \t$(PYTHON) -m venv .venv",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "Makefile",
+        "line": 13,
+        "col": 0,
+        "symbol": "nose",
+        "kind": "template_or_config_ref",
+        "snippet": "     10 | test:\n     11 | \tpython -m pytest\n     12 | \n >   13 | test-nose:\n     14 | \tnosetests tests/\n     15 | \n     16 | docker-build:",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": {
+      "name": "pytest",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Industry standard test runner",
+        "Full Python 3.12+ compatibility"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 9.1.1)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0010"
+      ],
+      "provenance": "AI_GENERATED"
+    },
+    "replacement_candidates": [
+      {
+        "name": "pytest",
+        "kind": "pypi",
+        "tradeoffs": [
+          "Industry standard test runner",
+          "Full Python 3.12+ compatibility"
+        ],
+        "validation": {
+          "exists_on_pypi_or_stdlib": true,
+          "is_stdlib": false,
+          "declares_py_compat": true,
+          "installs_cleanly": true,
+          "validation_log": "Verified on PyPI (latest: 9.1.1)"
+        },
+        "status": "ACCEPTED",
+        "rejection_reason": null,
+        "evidence_ids": [
+          "EV-AST-0010"
+        ],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "migration_steps": [
+      {
+        "order": 1,
+        "description": "Step 1: Remove nose and nosetests from the Makefile/configuration files.",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 2,
+        "description": "Step 2: Add pytest to the project dependencies.",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 3,
+        "description": "Step 3: Replace the 'test-nose' target in the Makefile with a 'test' target that uses pytest.",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 4,
+        "description": "Step 4: Run 'pytest' to verify that all tests pass.",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 5,
+        "description": "Step 5: Remove any nose-specific configuration files like 'nose.cfg' or '.noserc' if they exist.",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "patch": {
+      "attempt_number": 3,
+      "unified_diff": "--- a/Makefile\n+++ b/Makefile\n@@ -1,13 +1,12 @@\n IMAGE ?= linkwatch\n PYTHON ?= python3.12\n \n .PHONY: setup test docker-build docker-test\n \n setup: \n \t$(PYTHON) -m venv .venv\n \n test: \n \tpython -m pytest\n \n docker-build: ",
+      "applied_cleanly": false,
+      "error_message": "error: corrupt patch at line 16",
+      "provenance": "AI_GENERATED"
+    },
+    "suggested_tests": [
+      {
+        "test_name": "test_diff_compat_nose.py",
+        "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: nose\n    assert True\n",
+        "target_apis": [
+          "nose"
+        ],
+        "baseline_passed": false,
+        "candidate_passed": false,
+        "execution_evidence_id": null,
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "executed_test_results": [
+      {
+        "side": "baseline",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-BASE-0071",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      },
+      {
+        "side": "candidate",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-CAND-0072",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      }
+    ],
+    "compatibility_gaps": [
+      {
+        "id": "GAP-0073",
+        "description": "Automated migration diff failed to apply cleanly: error: corrupt patch at line 16",
+        "evidence_ids": [],
+        "severity": "HIGH",
+        "status": "OBSERVED",
+        "suggested_resolution": "Review the unified diff manually and resolve conflicting hunk offsets.",
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "GAP-0074",
+        "description": "Differential API test 'test_diff_compat_nose.py' failed against candidate 'pytest'.",
+        "evidence_ids": [],
+        "severity": "MEDIUM",
+        "status": "OBSERVED",
+        "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "open_concerns": [
+      {
+        "description": "Replacement 'pytest' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 9,
+      "verified_by_execution_count": 2,
+      "ai_generated_count": 11,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 22
+    },
+    "overall_verdict": "ANALYZED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:03:26.556098+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "Jinja2",
+      "raw_spec": "Jinja2==2.11.3",
+      "source_manifests": [
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "pinned_version": "2.11.3",
+      "constraint": "==2.11.3",
+      "latest_version": "3.1.6",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0030",
+        "dependency": "Jinja2",
+        "severity": "CRITICAL",
+        "source": "osv_api",
+        "observed_value": "Found 8 known security vulnerabilities: GHSA-cpwx-vrp4-4pq7 (Jinja2 vulnerable to sandbox breakout through attr filter selecting format method); GHSA-h5c8-rqwp-cp95 (Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter); GHSA-h75v-3vvj-5mfj (Jinja vulnerable to HTML attribute injection when passing user input as keys to xmlattr filter)",
+        "evidence_ids": [
+          "GHSA-cpwx-vrp4-4pq7",
+          "GHSA-h5c8-rqwp-cp95",
+          "GHSA-h75v-3vvj-5mfj",
+          "GHSA-q2x7-8rv6-6q7h",
+          "PYSEC-2026-1471",
+          "PYSEC-2026-1473",
+          "PYSEC-2026-1474",
+          "PYSEC-2026-1475"
+        ],
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "RISK-0031",
+        "dependency": "Jinja2",
+        "severity": "MEDIUM",
+        "source": "pypi_api",
+        "observed_value": "Pinned at 2.11.3, 1 major version behind latest (3.1.6)",
+        "evidence_ids": [
+          "EV-PYPI-0026"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 2,
+      "total_occurrences": 7,
+      "distinct_symbols": [
+        "Jinja2",
+        "jinja2.Environment",
+        "jinja2.FileSystemLoader",
+        "jinja2.select_autoescape"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 3.5,
+      "ai_characterization": "The repository uses Jinja2 to configure and instantiate a template environment via the `make_env` function. It imports core components such as `Environment`, `FileSystemLoader`, and `select_autoescape` to manage template loading and auto-escaping logic. The dependency is integrated into the core application logic for template rendering, representing a moderate coupling level.",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0030"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "linkwatch/report.py",
+        "line": 3,
+        "col": 0,
+        "symbol": "jinja2.Environment",
+        "kind": "import_from",
+        "snippet": "      1 | from datetime import datetime\n      2 | \n >    3 | from jinja2 import Environment, FileSystemLoader, select_autoescape\n      4 | \n      5 | from .resources import TEMPLATE_NAME, template_dir\n      6 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/report.py",
+        "line": 3,
+        "col": 0,
+        "symbol": "jinja2.FileSystemLoader",
+        "kind": "import_from",
+        "snippet": "      1 | from datetime import datetime\n      2 | \n >    3 | from jinja2 import Environment, FileSystemLoader, select_autoescape\n      4 | \n      5 | from .resources import TEMPLATE_NAME, template_dir\n      6 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/report.py",
+        "line": 3,
+        "col": 0,
+        "symbol": "jinja2.select_autoescape",
+        "kind": "import_from",
+        "snippet": "      1 | from datetime import datetime\n      2 | \n >    3 | from jinja2 import Environment, FileSystemLoader, select_autoescape\n      4 | \n      5 | from .resources import TEMPLATE_NAME, template_dir\n      6 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/report.py",
+        "line": 9,
+        "col": 11,
+        "symbol": "jinja2.Environment",
+        "kind": "call",
+        "snippet": "      6 | \n      7 | \n      8 | def make_env():\n >    9 |     return Environment(\n     10 |         loader=FileSystemLoader(template_dir()),\n     11 |         autoescape=select_autoescape([\"html\", \"j2\"]),\n     12 |     )",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/report.py",
+        "line": 10,
+        "col": 15,
+        "symbol": "jinja2.FileSystemLoader",
+        "kind": "call",
+        "snippet": "      7 | \n      8 | def make_env():\n      9 |     return Environment(\n >   10 |         loader=FileSystemLoader(template_dir()),\n     11 |         autoescape=select_autoescape([\"html\", \"j2\"]),\n     12 |     )\n     13 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/report.py",
+        "line": 11,
+        "col": 19,
+        "symbol": "jinja2.select_autoescape",
+        "kind": "call",
+        "snippet": "      8 | def make_env():\n      9 |     return Environment(\n     10 |         loader=FileSystemLoader(template_dir()),\n >   11 |         autoescape=select_autoescape([\"html\", \"j2\"]),\n     12 |     )\n     13 | \n     14 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 16,
+        "col": 0,
+        "symbol": "Jinja2",
+        "kind": "template_or_config_ref",
+        "snippet": "     13 |     \"toml==0.10.2\",\n     14 |     \"appdirs==1.4.4\",\n     15 |     \"requests==2.31.0\",\n >   16 |     \"Jinja2==2.11.3\",\n     17 |     \"pydantic>=2\",\n     18 |     \"click>=7\",\n     19 |     \"six\",",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": {
+      "name": "jinja2",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Upgrade pin to Jinja2>=3.1.0",
+        "Resolves security CVEs"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 3.1.6)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0030"
+      ],
+      "provenance": "AI_GENERATED"
+    },
+    "replacement_candidates": [
+      {
+        "name": "jinja2",
+        "kind": "pypi",
+        "tradeoffs": [
+          "Upgrade pin to Jinja2>=3.1.0",
+          "Resolves security CVEs"
+        ],
+        "validation": {
+          "exists_on_pypi_or_stdlib": true,
+          "is_stdlib": false,
+          "declares_py_compat": true,
+          "installs_cleanly": true,
+          "validation_log": "Verified on PyPI (latest: 3.1.6)"
+        },
+        "status": "ACCEPTED",
+        "rejection_reason": null,
+        "evidence_ids": [
+          "EV-AST-0030"
+        ],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "migration_steps": [
+      {
+        "order": 1,
+        "description": "Step 1: Update dependency declaration in pyproject.toml or requirements.txt from Jinja2 to jinja2",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 2,
+        "description": "Step 2: Verify that all import statements use the lowercase 'jinja2' package name",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 3,
+        "description": "Step 3: Run the test suite to ensure template rendering remains consistent",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "patch": {
+      "attempt_number": 1,
+      "unified_diff": "",
+      "applied_cleanly": true,
+      "error_message": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    "suggested_tests": [
+      {
+        "test_name": "test_diff_compat_jinja2.py",
+        "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: Jinja2, jinja2.Environment, jinja2.FileSystemLoader, jinja2.select_autoescape\n    assert True\n",
+        "target_apis": [
+          "Jinja2",
+          "jinja2.Environment",
+          "jinja2.FileSystemLoader",
+          "jinja2.select_autoescape"
+        ],
+        "baseline_passed": false,
+        "candidate_passed": false,
+        "execution_evidence_id": null,
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "executed_test_results": [
+      {
+        "side": "baseline",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-BASE-0076",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      },
+      {
+        "side": "candidate",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-CAND-0077",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      }
+    ],
+    "compatibility_gaps": [
+      {
+        "id": "GAP-0078",
+        "description": "Differential API test 'test_diff_compat_jinja2.py' failed against candidate 'jinja2'.",
+        "evidence_ids": [],
+        "severity": "MEDIUM",
+        "status": "OBSERVED",
+        "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "open_concerns": [
+      {
+        "description": "Replacement 'jinja2' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 13,
+      "verified_by_execution_count": 3,
+      "ai_generated_count": 8,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 24
+    },
+    "overall_verdict": "ANALYZED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:04:05.669653+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "idna",
+      "raw_spec": "idna==2.7",
+      "source_manifests": [
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "pinned_version": "2.7",
+      "constraint": "==2.7",
+      "latest_version": "3.20",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0060",
+        "dependency": "idna",
+        "severity": "CRITICAL",
+        "source": "osv_api",
+        "observed_value": "Found 4 known security vulnerabilities: GHSA-65pc-fj4g-8rjx (Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix); GHSA-jjg7-2v4v-x38h (Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode); PYSEC-2024-60 (A vulnerability was identified in the kjd/idna library, specifically within the `idna.encode()` function, affecting vers)",
+        "evidence_ids": [
+          "GHSA-65pc-fj4g-8rjx",
+          "GHSA-jjg7-2v4v-x38h",
+          "PYSEC-2024-60",
+          "PYSEC-2026-215"
+        ],
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "RISK-0061",
+        "dependency": "idna",
+        "severity": "MEDIUM",
+        "source": "pypi_api",
+        "observed_value": "Pinned at 2.7, 1 major version behind latest (3.20)",
+        "evidence_ids": [
+          "EV-PYPI-0056"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 1,
+      "total_occurrences": 1,
+      "distinct_symbols": [
+        "idna"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 1.2,
+      "ai_characterization": "The dependency 'idna' is listed as a requirement in the project's dependency specification file (likely requirements.txt or pyproject.toml), but there is no evidence of direct code-level interaction or functional calls to the library within the provided snippets. The coupling is limited to environment configuration.",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0060"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "pyproject.toml",
+        "line": 22,
+        "col": 0,
+        "symbol": "idna",
+        "kind": "template_or_config_ref",
+        "snippet": "     19 |     \"six\",\n     20 |     \"chardet==5.2.0\",\n     21 |     \"setuptools==75.8.0\",\n >   22 |     \"idna==2.7\",\n     23 |     \"python-dateutil\",\n     24 |     \"rich\",\n     25 | ]",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": null,
+    "replacement_candidates": [],
+    "migration_steps": [],
+    "patch": null,
+    "suggested_tests": [],
+    "executed_test_results": [],
+    "compatibility_gaps": [],
+    "open_concerns": [
+      {
+        "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 6,
+      "verified_by_execution_count": 0,
+      "ai_generated_count": 2,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 8
+    },
+    "overall_verdict": "NOT EXECUTED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:04:31.316634+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
       "tested_python_versions": [
         "3.13"
       ],
@@ -28,7 +926,7 @@
     },
     "risk_indicators": [
       {
-        "id": "RISK-0005",
+        "id": "RISK-0025",
         "dependency": "requests",
         "severity": "CRITICAL",
         "source": "osv_api",
@@ -56,9 +954,9 @@
       "is_monkey_patched": true,
       "is_test_only": false,
       "coupling_score": 8.5,
-      "ai_characterization": "The repository uses the 'requests' library to manage HTTP sessions and content-type parsing. It imports the 'Session' class directly (aliased as 'S') to instantiate session objects and uses internal utility functions from 'requests.utils' (specifically '_parse_content_type_header') to process response headers. Most critically, the repository performs monkey patching on the 'requests.Session.request' method, replacing it with a custom implementation ('_request') to alter global request behavior.",
+      "ai_characterization": "The repository uses 'requests' as a core networking component, utilizing both high-level Session objects and low-level utility functions from 'requests.utils'. The dependency is heavily integrated into theing logic, integrating with 'certifi' for SSL verification and 'response' objects to extract encoding information. Crucially, most importantly, the code performs direct monkey patching of 'requests.Session.request' to alter its request execution flow, indicating a high degree late-stage coupling.",
       "ai_characterization_evidence_ids": [
-        "EV-AST-0005"
+        "EV-AST-0025"
       ],
       "provenance": "OBSERVED"
     },
@@ -185,9 +1083,9 @@
       "schema_version": "1.0.0",
       "tool_name": "Exitwise",
       "tool_version": "0.1.0",
-      "generated_at": "2026-10-15T07:16:55.334198+00:00",
-      "target_repo_url": "C:\\Users\\KRISH\\AppData\\Local\\Temp\\test_linkwatch",
-      "target_commit_sha": "d912307480fcacc57bb07b5de486f57edef5767f",
+      "generated_at": "2026-10-15T11:04:56.738584+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
       "tested_python_versions": [
         "3.13"
       ],
@@ -196,67 +1094,1161 @@
       "cached": false
     },
     "dependency": {
-      "name": "idna",
-      "raw_spec": "idna==2.7",
+      "name": "pydantic",
+      "raw_spec": "pydantic==1.10.13",
       "source_manifests": [
         "requirements.txt",
         "pyproject.toml"
       ],
-      "pinned_version": "2.7",
-      "constraint": "==2.7",
-      "latest_version": "3.20",
+      "pinned_version": "1.10.13",
+      "constraint": "==1.10.13",
+      "latest_version": "2.14.1",
       "provenance": "OBSERVED"
     },
     "risk_indicators": [
       {
-        "id": "RISK-0010",
-        "dependency": "idna",
-        "severity": "CRITICAL",
-        "source": "osv_api",
-        "observed_value": "Found 4 known security vulnerabilities: GHSA-65pc-fj4g-8rjx (Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix); GHSA-jjg7-2v4v-x38h (Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode); PYSEC-2024-60 (A vulnerability was identified in the kjd/idna library, specifically within the `idna.encode()` function, affecting vers)",
+        "id": "RISK-0035",
+        "dependency": "pydantic",
+        "severity": "HIGH",
+        "source": "manifest_drift_detector",
+        "observed_value": "Conflicting version constraints declared across repository manifest files",
         "evidence_ids": [
-          "GHSA-65pc-fj4g-8rjx",
-          "GHSA-jjg7-2v4v-x38h",
-          "PYSEC-2024-60",
-          "PYSEC-2026-215"
+          "EV-DRIFT-0001"
         ],
         "provenance": "OBSERVED"
       },
       {
-        "id": "RISK-0011",
-        "dependency": "idna",
+        "id": "RISK-0036",
+        "dependency": "pydantic",
         "severity": "MEDIUM",
         "source": "pypi_api",
-        "observed_value": "Pinned at 2.7, 1 major version behind latest (3.20)",
+        "observed_value": "Pinned at 1.10.13, 1 major version behind latest (2.14.1)",
         "evidence_ids": [
-          "EV-PYPI-0006"
+          "EV-PYPI-0031"
         ],
         "provenance": "OBSERVED"
       }
     ],
     "usage_summary": {
-      "total_files": 1,
-      "total_occurrences": 1,
+      "total_files": 2,
+      "total_occurrences": 7,
       "distinct_symbols": [
-        "idna"
+        "class Settings(pydantic.BaseModel)",
+        "class Site(pydantic.BaseModel)",
+        "pydantic",
+        "pydantic.BaseModel",
+        "pydantic.validator"
       ],
       "is_monkey_patched": false,
       "is_test_only": false,
-      "coupling_score": 1.2,
-      "ai_characterization": "The dependency 'idna' is listed as a direct requirement in the project's dependency specification file (likely requirements.txt or pyproject.toml), but there are no functional code implementations or direct API calls observed in the provided snippets. The coupling is limited to version pinning.",
+      "coupling_score": 5.5,
+      "ai_characterization": "The repository uses pydantic to define core data models (Site and Settings) by subclassing BaseModel. It also utilizes the @validator decorator for custom field validation logic. The dependency is integrated into the core configuration and data structures of the application.",
       "ai_characterization_evidence_ids": [
-        "EV-AST-0010"
+        "EV-AST-0035"
       ],
       "provenance": "OBSERVED"
     },
     "usage_locations": [
       {
-        "file": "pyproject.toml",
-        "line": 22,
+        "file": "linkwatch/config.py",
+        "line": 4,
         "col": 0,
-        "symbol": "idna",
+        "symbol": "pydantic.BaseModel",
+        "kind": "import_from",
+        "snippet": "      1 | from typing import List\n      2 | \n      3 | import toml\n >    4 | from pydantic import BaseModel, validator\n      5 | \n      6 | \n      7 | class Site(BaseModel):",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/config.py",
+        "line": 4,
+        "col": 0,
+        "symbol": "pydantic.validator",
+        "kind": "import_from",
+        "snippet": "      1 | from typing import List\n      2 | \n      3 | import toml\n >    4 | from pydantic import BaseModel, validator\n      5 | \n      6 | \n      7 | class Site(BaseModel):",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/config.py",
+        "line": 7,
+        "col": 0,
+        "symbol": "class Site(pydantic.BaseModel)",
+        "kind": "inheritance",
+        "snippet": "      4 | from pydantic import BaseModel, validator\n      5 | \n      6 | \n >    7 | class Site(BaseModel):\n      8 |     name: str\n      9 |     url: str\n     10 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/config.py",
+        "line": 14,
+        "col": 5,
+        "symbol": "pydantic.validator",
+        "kind": "call",
+        "snippet": "     11 |     class Config:\n     12 |         anystr_strip_whitespace = True\n     13 | \n >   14 |     @validator(\"name\")\n     15 |     def name_not_empty(cls, value):\n     16 |         if not value:\n     17 |             raise ValueError(\"site name can not be empty\")",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/config.py",
+        "line": 20,
+        "col": 5,
+        "symbol": "pydantic.validator",
+        "kind": "call",
+        "snippet": "     17 |             raise ValueError(\"site name can not be empty\")\n     18 |         return value\n     19 | \n >   20 |     @validator(\"url\")\n     21 |     def url_has_scheme(cls, value):\n     22 |         if not value.startswith((\"http://\", \"https://\")):\n     23 |             raise ValueError(\"url must start with http:// or https://\")",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/config.py",
+        "line": 27,
+        "col": 0,
+        "symbol": "class Settings(pydantic.BaseModel)",
+        "kind": "inheritance",
+        "snippet": "     24 |         return value\n     25 | \n     26 | \n >   27 | class Settings(BaseModel):\n     28 |     title: str = \"linkwatch\"\n     29 |     output: str = \"status.html\"\n     30 |     sites: List[Site] = []",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 17,
+        "col": 0,
+        "symbol": "pydantic",
         "kind": "template_or_config_ref",
-        "snippet": "     19 |     \"six\",\n     20 |     \"chardet==5.2.0\",\n     21 |     \"setuptools==75.8.0\",\n >   22 |     \"idna==2.7\",\n     23 |     \"python-dateutil\",\n     24 |     \"rich\",\n     25 | ]",
+        "snippet": "     14 |     \"appdirs==1.4.4\",\n     15 |     \"requests==2.31.0\",\n     16 |     \"Jinja2==2.11.3\",\n >   17 |     \"pydantic>=2\",\n     18 |     \"click>=7\",\n     19 |     \"six\",\n     20 |     \"chardet==5.2.0\",",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": {
+      "name": "pydantic",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Migrate to Pydantic v2",
+        "Significant performance gains, aligns with pyproject.toml"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 2.14.1)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0035"
+      ],
+      "provenance": "AI_GENERATED"
+    },
+    "replacement_candidates": [
+      {
+        "name": "pydantic",
+        "kind": "pypi",
+        "tradeoffs": [
+          "Migrate to Pydantic v2",
+          "Significant performance gains, aligns with pyproject.toml"
+        ],
+        "validation": {
+          "exists_on_pypi_or_stdlib": true,
+          "is_stdlib": false,
+          "declares_py_compat": true,
+          "installs_cleanly": true,
+          "validation_log": "Verified on PyPI (latest: 2.14.1)"
+        },
+        "status": "ACCEPTED",
+        "rejection_reason": null,
+        "evidence_ids": [
+          "EV-AST-0035"
+        ],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "migration_steps": [
+      {
+        "order": 1,
+        "description": "1. Replace 'pydantic' with 'pydantic' in pyproject.toml / requirements.txt",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 2,
+        "description": "2. Update import statements in repository modules",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 3,
+        "description": "3. Run automated tests in sandbox environment",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "patch": {
+      "attempt_number": 1,
+      "unified_diff": "",
+      "applied_cleanly": true,
+      "error_message": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    "suggested_tests": [
+      {
+        "test_name": "test_diff_compat_pydantic.py",
+        "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: class Settings(pydantic.BaseModel), class Site(pydantic.BaseModel), pydantic, pydantic.BaseModel, pydantic.validator\n    assert True\n",
+        "target_apis": [
+          "class Settings(pydantic.BaseModel)",
+          "class Site(pydantic.BaseModel)",
+          "pydantic",
+          "pydantic.BaseModel",
+          "pydantic.validator"
+        ],
+        "baseline_passed": false,
+        "candidate_passed": false,
+        "execution_evidence_id": null,
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "executed_test_results": [
+      {
+        "side": "baseline",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-BASE-0080",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      },
+      {
+        "side": "candidate",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-CAND-0081",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      }
+    ],
+    "compatibility_gaps": [
+      {
+        "id": "GAP-0082",
+        "description": "Differential API test 'test_diff_compat_pydantic.py' failed against candidate 'pydantic'.",
+        "evidence_ids": [],
+        "severity": "MEDIUM",
+        "status": "OBSERVED",
+        "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "open_concerns": [
+      {
+        "description": "Replacement 'pydantic' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 13,
+      "verified_by_execution_count": 3,
+      "ai_generated_count": 8,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 24
+    },
+    "overall_verdict": "ANALYZED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:04:57.007694+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "toml",
+      "raw_spec": "toml==0.10.2",
+      "source_manifests": [
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "pinned_version": "0.10.2",
+      "constraint": "==0.10.2",
+      "latest_version": "0.10.2",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0015",
+        "dependency": "toml",
+        "severity": "HIGH",
+        "source": "pypi_api",
+        "observed_value": "No new PyPI release in 2174 days (~6.0 years, last: 2020-11-01)",
+        "evidence_ids": [
+          "EV-PYPI-0011"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 2,
+      "total_occurrences": 3,
+      "distinct_symbols": [
+        "toml",
+        "toml.load"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 2.5,
+      "ai_characterization": "Usage characterized by AST: used across 2 file(s).",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0015"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "linkwatch/config.py",
+        "line": 3,
+        "col": 0,
+        "symbol": "toml",
+        "kind": "import",
+        "snippet": "      1 | from typing import List\n      2 | \n >    3 | import toml\n      4 | from pydantic import BaseModel, validator\n      5 | \n      6 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/config.py",
+        "line": 37,
+        "col": 11,
+        "symbol": "toml.load",
+        "kind": "call",
+        "snippet": "     34 | \n     35 | \n     36 | def load_settings(path=\"sites.toml\"):\n >   37 |     data = toml.load(path)\n     38 |     return Settings(**data)",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 13,
+        "col": 0,
+        "symbol": "toml",
+        "kind": "template_or_config_ref",
+        "snippet": "     10 | license = { text = \"MIT\" }\n     11 | requires-python = \">=3.10\"\n     12 | dependencies = [\n >   13 |     \"toml==0.10.2\",\n     14 |     \"appdirs==1.4.4\",\n     15 |     \"requests==2.31.0\",\n     16 |     \"Jinja2==2.11.3\",",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": {
+      "name": "tomllib",
+      "kind": "stdlib",
+      "tradeoffs": [
+        "Standard library in Python 3.11+",
+        "Read-only (no TOML write)"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": true,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Candidate is a built-in Python standard library module in Python >= 3.11"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0015"
+      ],
+      "provenance": "AI_GENERATED"
+    },
+    "replacement_candidates": [
+      {
+        "name": "tomllib",
+        "kind": "stdlib",
+        "tradeoffs": [
+          "Standard library in Python 3.11+",
+          "Read-only (no TOML write)"
+        ],
+        "validation": {
+          "exists_on_pypi_or_stdlib": true,
+          "is_stdlib": true,
+          "declares_py_compat": true,
+          "installs_cleanly": true,
+          "validation_log": "Candidate is a built-in Python standard library module in Python >= 3.11"
+        },
+        "status": "ACCEPTED",
+        "rejection_reason": null,
+        "evidence_ids": [
+          "EV-AST-0015"
+        ],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "migration_steps": [
+      {
+        "order": 1,
+        "description": "1. Replace 'toml' with 'tomllib' in pyproject.toml / requirements.txt",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 2,
+        "description": "2. Update import statements in repository modules",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 3,
+        "description": "3. Run automated tests in sandbox environment",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "patch": {
+      "attempt_number": 1,
+      "unified_diff": "",
+      "applied_cleanly": true,
+      "error_message": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    "suggested_tests": [
+      {
+        "test_name": "test_diff_compat_toml.py",
+        "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: toml, toml.load\n    assert True\n",
+        "target_apis": [
+          "toml",
+          "toml.load"
+        ],
+        "baseline_passed": false,
+        "candidate_passed": false,
+        "execution_evidence_id": null,
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "executed_test_results": [
+      {
+        "side": "baseline",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-BASE-0084",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      },
+      {
+        "side": "candidate",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-CAND-0085",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      }
+    ],
+    "compatibility_gaps": [
+      {
+        "id": "GAP-0086",
+        "description": "Differential API test 'test_diff_compat_toml.py' failed against candidate 'tomllib'.",
+        "evidence_ids": [],
+        "severity": "MEDIUM",
+        "status": "OBSERVED",
+        "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "open_concerns": [
+      {
+        "description": "Replacement 'tomllib' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 8,
+      "verified_by_execution_count": 3,
+      "ai_generated_count": 8,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 19
+    },
+    "overall_verdict": "ANALYZED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:04:59.279369+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "appdirs",
+      "raw_spec": "appdirs==1.4.4",
+      "source_manifests": [
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "pinned_version": "1.4.4",
+      "constraint": "==1.4.4",
+      "latest_version": "1.4.4",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0020",
+        "dependency": "appdirs",
+        "severity": "HIGH",
+        "source": "pypi_api",
+        "observed_value": "No new PyPI release in 2348 days (~6.4 years, last: 2020-05-11)",
+        "evidence_ids": [
+          "EV-PYPI-0016"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 2,
+      "total_occurrences": 3,
+      "distinct_symbols": [
+        "appdirs",
+        "appdirs.user_cache_dir"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 2.5,
+      "ai_characterization": "Usage characterized by AST: used across 2 file(s).",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0020"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "linkwatch/cache.py",
+        "line": 4,
+        "col": 0,
+        "symbol": "appdirs.user_cache_dir",
+        "kind": "import_from",
+        "snippet": "      1 | import json\n      2 | import os\n      3 | \n >    4 | from appdirs import user_cache_dir\n      5 | \n      6 | RESULTS_FILE = \"results.json\"\n      7 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/cache.py",
+        "line": 10,
+        "col": 52,
+        "symbol": "appdirs.user_cache_dir",
+        "kind": "call",
+        "snippet": "      7 | \n      8 | \n      9 | def cache_dir():\n >   10 |     path = os.environ.get(\"LINKWATCH_CACHE_DIR\") or user_cache_dir(\"linkwatch\")\n     11 |     os.makedirs(path, exist_ok=True)\n     12 |     return path\n     13 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 14,
+        "col": 0,
+        "symbol": "appdirs",
+        "kind": "template_or_config_ref",
+        "snippet": "     11 | requires-python = \">=3.10\"\n     12 | dependencies = [\n     13 |     \"toml==0.10.2\",\n >   14 |     \"appdirs==1.4.4\",\n     15 |     \"requests==2.31.0\",\n     16 |     \"Jinja2==2.11.3\",\n     17 |     \"pydantic>=2\",",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": {
+      "name": "platformdirs",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Actively maintained community fork of appdirs",
+        "Direct API compatibility"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 4.13.0)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0020"
+      ],
+      "provenance": "AI_GENERATED"
+    },
+    "replacement_candidates": [
+      {
+        "name": "platformdirs",
+        "kind": "pypi",
+        "tradeoffs": [
+          "Actively maintained community fork of appdirs",
+          "Direct API compatibility"
+        ],
+        "validation": {
+          "exists_on_pypi_or_stdlib": true,
+          "is_stdlib": false,
+          "declares_py_compat": true,
+          "installs_cleanly": true,
+          "validation_log": "Verified on PyPI (latest: 4.13.0)"
+        },
+        "status": "ACCEPTED",
+        "rejection_reason": null,
+        "evidence_ids": [
+          "EV-AST-0020"
+        ],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "migration_steps": [
+      {
+        "order": 1,
+        "description": "1. Replace 'appdirs' with 'platformdirs' in pyproject.toml / requirements.txt",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 2,
+        "description": "2. Update import statements in repository modules",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 3,
+        "description": "3. Run automated tests in sandbox environment",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "patch": {
+      "attempt_number": 1,
+      "unified_diff": "--- a/linkwatch/cache.py\n+++ b/linkwatch/cache.py\n@@ -1,4 +1,4 @@\n-import appdirs\n+import platformdirs as appdirs\n",
+      "applied_cleanly": false,
+      "error_message": "error: corrupt patch at line 6",
+      "provenance": "AI_GENERATED"
+    },
+    "suggested_tests": [
+      {
+        "test_name": "test_diff_compat_appdirs.py",
+        "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: appdirs, appdirs.user_cache_dir\n    assert True\n",
+        "target_apis": [
+          "appdirs",
+          "appdirs.user_cache_dir"
+        ],
+        "baseline_passed": false,
+        "candidate_passed": false,
+        "execution_evidence_id": null,
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "executed_test_results": [
+      {
+        "side": "baseline",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-BASE-0088",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      },
+      {
+        "side": "candidate",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-CAND-0089",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      }
+    ],
+    "compatibility_gaps": [
+      {
+        "id": "GAP-0090",
+        "description": "Automated migration diff failed to apply cleanly: error: corrupt patch at line 6",
+        "evidence_ids": [],
+        "severity": "HIGH",
+        "status": "OBSERVED",
+        "suggested_resolution": "Review the unified diff manually and resolve conflicting hunk offsets.",
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "GAP-0091",
+        "description": "Differential API test 'test_diff_compat_appdirs.py' failed against candidate 'platformdirs'.",
+        "evidence_ids": [],
+        "severity": "MEDIUM",
+        "status": "OBSERVED",
+        "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "open_concerns": [
+      {
+        "description": "Replacement 'platformdirs' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 9,
+      "verified_by_execution_count": 2,
+      "ai_generated_count": 9,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 20
+    },
+    "overall_verdict": "ANALYZED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:05:03.513139+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "chardet",
+      "raw_spec": "chardet==5.2.0",
+      "source_manifests": [
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "pinned_version": "5.2.0",
+      "constraint": "==5.2.0",
+      "latest_version": "7.6.0",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0050",
+        "dependency": "chardet",
+        "severity": "HIGH",
+        "source": "pypi_api",
+        "observed_value": "Pinned at 5.2.0, 2 major versions behind latest (7.6.0)",
+        "evidence_ids": [
+          "EV-PYPI-0046"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 2,
+      "total_occurrences": 3,
+      "distinct_symbols": [
+        "chardet",
+        "chardet.detect"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 2.5,
+      "ai_characterization": "Usage characterized by AST: used across 2 file(s).",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0050"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "linkwatch/encoding.py",
+        "line": 4,
+        "col": 0,
+        "symbol": "chardet",
+        "kind": "import",
+        "snippet": "      1 | import html\n      2 | import re\n      3 | \n >    4 | import chardet\n      5 | from requests.utils import _parse_content_type_header\n      6 | \n      7 | TITLE_RE = re.compile(r\"<title[^>]*>(.*?)</title>\", re.IGNORECASE | re.DOTALL)",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/encoding.py",
+        "line": 15,
+        "col": 12,
+        "symbol": "chardet.detect",
+        "kind": "call",
+        "snippet": "     12 |     charset = params.get(\"charset\")\n     13 |     if charset and charset is not True:\n     14 |         return charset\n >   15 |     guess = chardet.detect(resp.content)\n     16 |     return guess[\"encoding\"] or \"utf-8\"\n     17 | \n     18 | ",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 20,
+        "col": 0,
+        "symbol": "chardet",
+        "kind": "template_or_config_ref",
+        "snippet": "     17 |     \"pydantic>=2\",\n     18 |     \"click>=7\",\n     19 |     \"six\",\n >   20 |     \"chardet==5.2.0\",\n     21 |     \"setuptools==75.8.0\",\n     22 |     \"idna==2.7\",\n     23 |     \"python-dateutil\",",
+        "context": "config_or_template",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "proposed_replacement": {
+      "name": "charset-normalizer",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Modern, pure Python encoding detector",
+        "Faster and MIT licensed"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 3.5.2)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0050"
+      ],
+      "provenance": "AI_GENERATED"
+    },
+    "replacement_candidates": [
+      {
+        "name": "charset-normalizer",
+        "kind": "pypi",
+        "tradeoffs": [
+          "Modern, pure Python encoding detector",
+          "Faster and MIT licensed"
+        ],
+        "validation": {
+          "exists_on_pypi_or_stdlib": true,
+          "is_stdlib": false,
+          "declares_py_compat": true,
+          "installs_cleanly": true,
+          "validation_log": "Verified on PyPI (latest: 3.5.2)"
+        },
+        "status": "ACCEPTED",
+        "rejection_reason": null,
+        "evidence_ids": [
+          "EV-AST-0050"
+        ],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "migration_steps": [
+      {
+        "order": 1,
+        "description": "1. Replace 'chardet' with 'charset-normalizer' in pyproject.toml / requirements.txt",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 2,
+        "description": "2. Update import statements in repository modules",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "order": 3,
+        "description": "3. Run automated tests in sandbox environment",
+        "command": null,
+        "status": "AI_PROPOSED",
+        "evidence_ids": [],
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "patch": {
+      "attempt_number": 1,
+      "unified_diff": "--- a/linkwatch/encoding.py\n+++ b/linkwatch/encoding.py\n@@ -1,4 +1,4 @@\n-import chardet\n+import charset_normalizer as chardet\n",
+      "applied_cleanly": false,
+      "error_message": "error: corrupt patch at line 6",
+      "provenance": "AI_GENERATED"
+    },
+    "suggested_tests": [
+      {
+        "test_name": "test_diff_compat_chardet.py",
+        "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: chardet, chardet.detect\n    assert True\n",
+        "target_apis": [
+          "chardet",
+          "chardet.detect"
+        ],
+        "baseline_passed": false,
+        "candidate_passed": false,
+        "execution_evidence_id": null,
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "executed_test_results": [
+      {
+        "side": "baseline",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-BASE-0093",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      },
+      {
+        "side": "candidate",
+        "python_version": "3.13",
+        "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+        "exit_code": 1,
+        "passed": 0,
+        "failed": 0,
+        "errors": 0,
+        "duration_seconds": 0.01,
+        "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+        "pip_freeze": [],
+        "flaky": false,
+        "evidence_id": "EV-EXEC-CAND-0094",
+        "not_executed_reason": null,
+        "provenance": "VERIFIED_BY_EXECUTION"
+      }
+    ],
+    "compatibility_gaps": [
+      {
+        "id": "GAP-0095",
+        "description": "Automated migration diff failed to apply cleanly: error: corrupt patch at line 6",
+        "evidence_ids": [],
+        "severity": "HIGH",
+        "status": "OBSERVED",
+        "suggested_resolution": "Review the unified diff manually and resolve conflicting hunk offsets.",
+        "provenance": "OBSERVED"
+      },
+      {
+        "id": "GAP-0096",
+        "description": "Differential API test 'test_diff_compat_chardet.py' failed against candidate 'charset-normalizer'.",
+        "evidence_ids": [],
+        "severity": "MEDIUM",
+        "status": "OBSERVED",
+        "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "open_concerns": [
+      {
+        "description": "Replacement 'charset-normalizer' may introduce new transitive dependencies requiring separate audit.",
+        "category": "transitive_dependencies",
+        "provenance": "AI_GENERATED"
+      },
+      {
+        "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+        "category": "untested_runtime_paths",
+        "provenance": "AI_GENERATED"
+      }
+    ],
+    "limitations": [
+      {
+        "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+        "category": "sandbox_environment",
+        "provenance": "OBSERVED"
+      }
+    ],
+    "provenance_summary": {
+      "observed_count": 9,
+      "verified_by_execution_count": 2,
+      "ai_generated_count": 9,
+      "ai_verified_count": 0,
+      "not_verified_count": 0,
+      "total_claims": 20
+    },
+    "overall_verdict": "ANALYZED"
+  },
+  {
+    "meta": {
+      "schema_version": "1.0.0",
+      "tool_name": "Exitwise",
+      "tool_version": "0.1.0",
+      "generated_at": "2026-10-15T11:05:03.610038+00:00",
+      "target_repo_url": "https://github.com/rishrek/LinkWatch",
+      "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+      "tested_python_versions": [
+        "3.13"
+      ],
+      "gemma_model_id": "gemma-4-26b-a4b-it",
+      "access_method": "Hosted Gemini API via official google-genai Python SDK",
+      "cached": false
+    },
+    "dependency": {
+      "name": "python-dateutil",
+      "raw_spec": "python-dateutil",
+      "source_manifests": [
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "pinned_version": null,
+      "constraint": "",
+      "latest_version": "2.9.0.post0",
+      "provenance": "OBSERVED"
+    },
+    "risk_indicators": [
+      {
+        "id": "RISK-0065",
+        "dependency": "python-dateutil",
+        "severity": "MEDIUM",
+        "source": "pypi_api",
+        "observed_value": "No new PyPI release in 957 days (~2.6 years, last: 2024-03-01)",
+        "evidence_ids": [
+          "EV-PYPI-0061"
+        ],
+        "provenance": "OBSERVED"
+      }
+    ],
+    "usage_summary": {
+      "total_files": 2,
+      "total_occurrences": 3,
+      "distinct_symbols": [
+        "dateutil.parser",
+        "python-dateutil"
+      ],
+      "is_monkey_patched": false,
+      "is_test_only": false,
+      "coupling_score": 2.5,
+      "ai_characterization": "Usage characterized by AST: used across 2 file(s).",
+      "ai_characterization_evidence_ids": [
+        "EV-AST-0065"
+      ],
+      "provenance": "OBSERVED"
+    },
+    "usage_locations": [
+      {
+        "file": "linkwatch/dates.py",
+        "line": 1,
+        "col": 0,
+        "symbol": "dateutil.parser",
+        "kind": "import_from",
+        "snippet": " >    1 | from dateutil import parser\n      2 | \n      3 | \n      4 | def parse_last_modified(value):",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "linkwatch/dates.py",
+        "line": 8,
+        "col": 15,
+        "symbol": "dateutil.parser",
+        "kind": "call",
+        "snippet": "      5 |     if not value:\n      6 |         return None\n      7 |     try:\n >    8 |         return parser.parse(value)\n      9 |     except (ValueError, OverflowError):\n     10 |         return None",
+        "context": "runtime",
+        "provenance": "OBSERVED"
+      },
+      {
+        "file": "pyproject.toml",
+        "line": 23,
+        "col": 0,
+        "symbol": "python-dateutil",
+        "kind": "template_or_config_ref",
+        "snippet": "     20 |     \"chardet==5.2.0\",\n     21 |     \"setuptools==75.8.0\",\n     22 |     \"idna==2.7\",\n >   23 |     \"python-dateutil\",\n     24 |     \"rich\",\n     25 | ]\n     26 | ",
         "context": "config_or_template",
         "provenance": "OBSERVED"
       }
@@ -288,12 +2280,12 @@
       }
     ],
     "provenance_summary": {
-      "observed_count": 6,
+      "observed_count": 7,
       "verified_by_execution_count": 0,
       "ai_generated_count": 2,
       "ai_verified_count": 0,
       "not_verified_count": 0,
-      "total_claims": 8
+      "total_claims": 9
     },
     "overall_verdict": "NOT EXECUTED"
   }

@@ -1,0 +1,276 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T11:02:30.253474+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "nose",
+    "raw_spec": "nose==1.3.7",
+    "source_manifests": [
+      "requirements-dev.txt"
+    ],
+    "pinned_version": "1.3.7",
+    "constraint": "==1.3.7",
+    "latest_version": "1.3.7",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0010",
+      "dependency": "nose",
+      "severity": "CRITICAL",
+      "source": "python_compat_evaluator",
+      "observed_value": "Incompatible with target Python runtimes: nose relies on the 'imp' module removed in Python 3.12 and fails to import/run.",
+      "evidence_ids": [
+        "EV-COMPAT-0009"
+      ],
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "RISK-0011",
+      "dependency": "nose",
+      "severity": "HIGH",
+      "source": "pypi_api",
+      "observed_value": "No new PyPI release in 4153 days (~11.4 years, last: 2015-06-02)",
+      "evidence_ids": [
+        "EV-PYPI-0006"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 1,
+    "total_occurrences": 2,
+    "distinct_symbols": [
+      "nose"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 1.2,
+    "ai_characterization": "The dependency 'nose' is used exclusively as a command-line tool within a Makefile to execute tests via the 'nosetests' command. There is no evidence of direct Python module imports or programmatic usage within the application code.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0010"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "Makefile",
+      "line": 4,
+      "col": 0,
+      "symbol": "nose",
+      "kind": "template_or_config_ref",
+      "snippet": "      1 | IMAGE ?= linkwatch\n      2 | PYTHON ?= python3.12\n      3 | \n >    4 | .PHONY: setup test test-nose docker-build docker-test\n      5 | \n      6 | setup:\n      7 | \t$(PYTHON) -m venv .venv",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "Makefile",
+      "line": 13,
+      "col": 0,
+      "symbol": "nose",
+      "kind": "template_or_config_ref",
+      "snippet": "     10 | test:\n     11 | \tpython -m pytest\n     12 | \n >   13 | test-nose:\n     14 | \tnosetests tests/\n     15 | \n     16 | docker-build:",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": {
+    "name": "pytest",
+    "kind": "pypi",
+    "tradeoffs": [
+      "Industry standard test runner",
+      "Full Python 3.12+ compatibility"
+    ],
+    "validation": {
+      "exists_on_pypi_or_stdlib": true,
+      "is_stdlib": false,
+      "declares_py_compat": true,
+      "installs_cleanly": true,
+      "validation_log": "Verified on PyPI (latest: 9.1.1)"
+    },
+    "status": "ACCEPTED",
+    "rejection_reason": null,
+    "evidence_ids": [
+      "EV-AST-0010"
+    ],
+    "provenance": "AI_GENERATED"
+  },
+  "replacement_candidates": [
+    {
+      "name": "pytest",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Industry standard test runner",
+        "Full Python 3.12+ compatibility"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 9.1.1)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0010"
+      ],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "migration_steps": [
+    {
+      "order": 1,
+      "description": "Step 1: Remove nose and nosetests from the Makefile/configuration files.",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 2,
+      "description": "Step 2: Add pytest to the project dependencies.",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 3,
+      "description": "Step 3: Replace the 'test-nose' target in the Makefile with a 'test' target that uses pytest.",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 4,
+      "description": "Step 4: Run 'pytest' to verify that all tests pass.",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 5,
+      "description": "Step 5: Remove any nose-specific configuration files like 'nose.cfg' or '.noserc' if they exist.",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "patch": {
+    "attempt_number": 3,
+    "unified_diff": "--- a/Makefile\n+++ b/Makefile\n@@ -1,13 +1,12 @@\n IMAGE ?= linkwatch\n PYTHON ?= python3.12\n \n .PHONY: setup test docker-build docker-test\n \n setup: \n \t$(PYTHON) -m venv .venv\n \n test: \n \tpython -m pytest\n \n docker-build: ",
+    "applied_cleanly": false,
+    "error_message": "error: corrupt patch at line 16",
+    "provenance": "AI_GENERATED"
+  },
+  "suggested_tests": [
+    {
+      "test_name": "test_diff_compat_nose.py",
+      "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: nose\n    assert True\n",
+      "target_apis": [
+        "nose"
+      ],
+      "baseline_passed": false,
+      "candidate_passed": false,
+      "execution_evidence_id": null,
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "executed_test_results": [
+    {
+      "side": "baseline",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-BASE-0071",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    {
+      "side": "candidate",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-CAND-0072",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    }
+  ],
+  "compatibility_gaps": [
+    {
+      "id": "GAP-0073",
+      "description": "Automated migration diff failed to apply cleanly: error: corrupt patch at line 16",
+      "evidence_ids": [],
+      "severity": "HIGH",
+      "status": "OBSERVED",
+      "suggested_resolution": "Review the unified diff manually and resolve conflicting hunk offsets.",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "GAP-0074",
+      "description": "Differential API test 'test_diff_compat_nose.py' failed against candidate 'pytest'.",
+      "evidence_ids": [],
+      "severity": "MEDIUM",
+      "status": "OBSERVED",
+      "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "open_concerns": [
+    {
+      "description": "Replacement 'pytest' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 9,
+    "verified_by_execution_count": 2,
+    "ai_generated_count": 11,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 22
+  },
+  "overall_verdict": "ANALYZED"
+}

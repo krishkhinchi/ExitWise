@@ -1,0 +1,909 @@
+{
+  "$defs": {
+    "CandidateValidation": {
+      "description": "Deterministic validation results for an AI-proposed replacement candidate.",
+      "properties": {
+        "exists_on_pypi_or_stdlib": {
+          "default": false,
+          "title": "Exists On Pypi Or Stdlib",
+          "type": "boolean"
+        },
+        "is_stdlib": {
+          "default": false,
+          "title": "Is Stdlib",
+          "type": "boolean"
+        },
+        "declares_py_compat": {
+          "default": false,
+          "title": "Declares Py Compat",
+          "type": "boolean"
+        },
+        "installs_cleanly": {
+          "default": false,
+          "title": "Installs Cleanly",
+          "type": "boolean"
+        },
+        "validation_log": {
+          "default": "",
+          "title": "Validation Log",
+          "type": "string"
+        }
+      },
+      "title": "CandidateValidation",
+      "type": "object"
+    },
+    "CapsuleMeta": {
+      "description": "Metadata block recording run environment, commit SHA, and Gemma model ID.",
+      "properties": {
+        "schema_version": {
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tool_name": {
+          "default": "Exitwise",
+          "title": "Tool Name",
+          "type": "string"
+        },
+        "tool_version": {
+          "default": "0.1.0",
+          "title": "Tool Version",
+          "type": "string"
+        },
+        "generated_at": {
+          "title": "Generated At",
+          "type": "string"
+        },
+        "target_repo_url": {
+          "title": "Target Repo Url",
+          "type": "string"
+        },
+        "target_commit_sha": {
+          "title": "Target Commit Sha",
+          "type": "string"
+        },
+        "tested_python_versions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tested Python Versions",
+          "type": "array"
+        },
+        "gemma_model_id": {
+          "title": "Gemma Model Id",
+          "type": "string"
+        },
+        "access_method": {
+          "title": "Access Method",
+          "type": "string"
+        },
+        "cached": {
+          "default": false,
+          "title": "Cached",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "generated_at",
+        "target_repo_url",
+        "target_commit_sha",
+        "gemma_model_id",
+        "access_method"
+      ],
+      "title": "CapsuleMeta",
+      "type": "object"
+    },
+    "CompatibilityGap": {
+      "description": "Observed or hypothesized behavioral/API gap after replacement.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "severity": {
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "INFO"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OBSERVED",
+            "AI_HYPOTHESIS"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "suggested_resolution": {
+          "title": "Suggested Resolution",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "OBSERVED"
+        }
+      },
+      "required": [
+        "id",
+        "description",
+        "severity",
+        "status",
+        "suggested_resolution"
+      ],
+      "title": "CompatibilityGap",
+      "type": "object"
+    },
+    "DependencyRecord": {
+      "description": "Target dependency inspected.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "raw_spec": {
+          "title": "Raw Spec",
+          "type": "string"
+        },
+        "source_manifests": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Manifests",
+          "type": "array"
+        },
+        "pinned_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pinned Version"
+        },
+        "constraint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Constraint"
+        },
+        "latest_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Latest Version"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "OBSERVED"
+        }
+      },
+      "required": [
+        "name",
+        "raw_spec"
+      ],
+      "title": "DependencyRecord",
+      "type": "object"
+    },
+    "DifferentialTest": {
+      "description": "AI-generated differential compatibility test.",
+      "properties": {
+        "test_name": {
+          "title": "Test Name",
+          "type": "string"
+        },
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "target_apis": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Target Apis",
+          "type": "array"
+        },
+        "baseline_passed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Baseline Passed"
+        },
+        "candidate_passed": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Candidate Passed"
+        },
+        "execution_evidence_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Execution Evidence Id"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "AI_GENERATED"
+        }
+      },
+      "required": [
+        "test_name",
+        "code"
+      ],
+      "title": "DifferentialTest",
+      "type": "object"
+    },
+    "Limitation": {
+      "description": "Technical limitation or skipped step in the capsule generation.",
+      "properties": {
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "OBSERVED"
+        }
+      },
+      "required": [
+        "description",
+        "category"
+      ],
+      "title": "Limitation",
+      "type": "object"
+    },
+    "MigrationStep": {
+      "description": "Ordered step for executing a dependency migration.",
+      "properties": {
+        "order": {
+          "title": "Order",
+          "type": "integer"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "command": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Command"
+        },
+        "status": {
+          "default": "AI_PROPOSED",
+          "enum": [
+            "AI_PROPOSED",
+            "EXECUTED",
+            "FAILED",
+            "SKIPPED"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "AI_GENERATED"
+        }
+      },
+      "required": [
+        "order",
+        "description"
+      ],
+      "title": "MigrationStep",
+      "type": "object"
+    },
+    "OpenConcern": {
+      "description": "Untested code paths, license differences, or production-only concerns.",
+      "properties": {
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "AI_GENERATED"
+        }
+      },
+      "required": [
+        "description",
+        "category"
+      ],
+      "title": "OpenConcern",
+      "type": "object"
+    },
+    "PatchAttempt": {
+      "description": "Patch applied to sandbox workspace.",
+      "properties": {
+        "attempt_number": {
+          "default": 1,
+          "title": "Attempt Number",
+          "type": "integer"
+        },
+        "unified_diff": {
+          "default": "",
+          "title": "Unified Diff",
+          "type": "string"
+        },
+        "applied_cleanly": {
+          "default": false,
+          "title": "Applied Cleanly",
+          "type": "boolean"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "AI_GENERATED"
+        }
+      },
+      "title": "PatchAttempt",
+      "type": "object"
+    },
+    "Provenance": {
+      "description": "Provenance states enforcing strict separation of AI claims and verified facts.",
+      "enum": [
+        "OBSERVED",
+        "VERIFIED_BY_EXECUTION",
+        "AI_GENERATED",
+        "AI_VERIFIED",
+        "NOT_VERIFIED"
+      ],
+      "title": "Provenance",
+      "type": "string"
+    },
+    "ReplacementCandidate": {
+      "description": "Proposed replacement candidate with trade-offs and validation status.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "pypi",
+            "stdlib",
+            "none"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "tradeoffs": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tradeoffs",
+          "type": "array"
+        },
+        "validation": {
+          "$ref": "#/$defs/CandidateValidation"
+        },
+        "status": {
+          "default": "ACCEPTED",
+          "enum": [
+            "ACCEPTED",
+            "REJECTED",
+            "MONITOR_ONLY"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "rejection_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rejection Reason"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "AI_GENERATED"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "title": "ReplacementCandidate",
+      "type": "object"
+    },
+    "RiskIndicator": {
+      "description": "Deterministic or surfaced risk flag for a dependency.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "dependency": {
+          "title": "Dependency",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "CRITICAL",
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "INFO"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "observed_value": {
+          "title": "Observed Value",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "OBSERVED"
+        }
+      },
+      "required": [
+        "id",
+        "dependency",
+        "severity",
+        "source",
+        "observed_value"
+      ],
+      "title": "RiskIndicator",
+      "type": "object"
+    },
+    "TestRun": {
+      "description": "Observed test execution outcome in an isolated sandbox environment.",
+      "properties": {
+        "side": {
+          "enum": [
+            "baseline",
+            "candidate",
+            "differential"
+          ],
+          "title": "Side",
+          "type": "string"
+        },
+        "python_version": {
+          "title": "Python Version",
+          "type": "string"
+        },
+        "command": {
+          "title": "Command",
+          "type": "string"
+        },
+        "exit_code": {
+          "title": "Exit Code",
+          "type": "integer"
+        },
+        "passed": {
+          "default": 0,
+          "title": "Passed",
+          "type": "integer"
+        },
+        "failed": {
+          "default": 0,
+          "title": "Failed",
+          "type": "integer"
+        },
+        "errors": {
+          "default": 0,
+          "title": "Errors",
+          "type": "integer"
+        },
+        "duration_seconds": {
+          "default": 0.0,
+          "title": "Duration Seconds",
+          "type": "number"
+        },
+        "output_tail": {
+          "default": "",
+          "title": "Output Tail",
+          "type": "string"
+        },
+        "pip_freeze": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Pip Freeze",
+          "type": "array"
+        },
+        "flaky": {
+          "default": false,
+          "title": "Flaky",
+          "type": "boolean"
+        },
+        "evidence_id": {
+          "default": "",
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "not_executed_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Not Executed Reason"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "VERIFIED_BY_EXECUTION"
+        }
+      },
+      "required": [
+        "side",
+        "python_version",
+        "command",
+        "exit_code"
+      ],
+      "title": "TestRun",
+      "type": "object"
+    },
+    "TrustSummary": {
+      "description": "Counts per provenance tag to give maintainers transparent confidence.",
+      "properties": {
+        "observed_count": {
+          "default": 0,
+          "title": "Observed Count",
+          "type": "integer"
+        },
+        "verified_by_execution_count": {
+          "default": 0,
+          "title": "Verified By Execution Count",
+          "type": "integer"
+        },
+        "ai_generated_count": {
+          "default": 0,
+          "title": "Ai Generated Count",
+          "type": "integer"
+        },
+        "ai_verified_count": {
+          "default": 0,
+          "title": "Ai Verified Count",
+          "type": "integer"
+        },
+        "not_verified_count": {
+          "default": 0,
+          "title": "Not Verified Count",
+          "type": "integer"
+        },
+        "total_claims": {
+          "default": 0,
+          "title": "Total Claims",
+          "type": "integer"
+        }
+      },
+      "title": "TrustSummary",
+      "type": "object"
+    },
+    "UsageLocation": {
+      "description": "Exact code location where a dependency is referenced or invoked.",
+      "properties": {
+        "file": {
+          "title": "File",
+          "type": "string"
+        },
+        "line": {
+          "title": "Line",
+          "type": "integer"
+        },
+        "col": {
+          "default": 0,
+          "title": "Col",
+          "type": "integer"
+        },
+        "symbol": {
+          "title": "Symbol",
+          "type": "string"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "snippet": {
+          "title": "Snippet",
+          "type": "string"
+        },
+        "context": {
+          "title": "Context",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "OBSERVED"
+        }
+      },
+      "required": [
+        "file",
+        "line",
+        "symbol",
+        "kind",
+        "snippet",
+        "context"
+      ],
+      "title": "UsageLocation",
+      "type": "object"
+    },
+    "UsageSummary": {
+      "description": "Aggregated coupling and usage characterization for a dependency.",
+      "properties": {
+        "total_files": {
+          "default": 0,
+          "title": "Total Files",
+          "type": "integer"
+        },
+        "total_occurrences": {
+          "default": 0,
+          "title": "Total Occurrences",
+          "type": "integer"
+        },
+        "distinct_symbols": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Distinct Symbols",
+          "type": "array"
+        },
+        "is_monkey_patched": {
+          "default": false,
+          "title": "Is Monkey Patched",
+          "type": "boolean"
+        },
+        "is_test_only": {
+          "default": false,
+          "title": "Is Test Only",
+          "type": "boolean"
+        },
+        "coupling_score": {
+          "default": 0.0,
+          "title": "Coupling Score",
+          "type": "number"
+        },
+        "ai_characterization": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ai Characterization"
+        },
+        "ai_characterization_evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ai Characterization Evidence Ids",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance",
+          "default": "OBSERVED"
+        }
+      },
+      "title": "UsageSummary",
+      "type": "object"
+    }
+  },
+  "description": "Canonical Dependency Exit Capsule containing all verified facts and AI proposals.",
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/CapsuleMeta"
+    },
+    "dependency": {
+      "$ref": "#/$defs/DependencyRecord"
+    },
+    "risk_indicators": {
+      "items": {
+        "$ref": "#/$defs/RiskIndicator"
+      },
+      "title": "Risk Indicators",
+      "type": "array"
+    },
+    "usage_summary": {
+      "$ref": "#/$defs/UsageSummary"
+    },
+    "usage_locations": {
+      "items": {
+        "$ref": "#/$defs/UsageLocation"
+      },
+      "title": "Usage Locations",
+      "type": "array"
+    },
+    "proposed_replacement": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReplacementCandidate"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "replacement_candidates": {
+      "items": {
+        "$ref": "#/$defs/ReplacementCandidate"
+      },
+      "title": "Replacement Candidates",
+      "type": "array"
+    },
+    "migration_steps": {
+      "items": {
+        "$ref": "#/$defs/MigrationStep"
+      },
+      "title": "Migration Steps",
+      "type": "array"
+    },
+    "patch": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/PatchAttempt"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "suggested_tests": {
+      "items": {
+        "$ref": "#/$defs/DifferentialTest"
+      },
+      "title": "Suggested Tests",
+      "type": "array"
+    },
+    "executed_test_results": {
+      "items": {
+        "$ref": "#/$defs/TestRun"
+      },
+      "title": "Executed Test Results",
+      "type": "array"
+    },
+    "compatibility_gaps": {
+      "items": {
+        "$ref": "#/$defs/CompatibilityGap"
+      },
+      "title": "Compatibility Gaps",
+      "type": "array"
+    },
+    "open_concerns": {
+      "items": {
+        "$ref": "#/$defs/OpenConcern"
+      },
+      "title": "Open Concerns",
+      "type": "array"
+    },
+    "limitations": {
+      "items": {
+        "$ref": "#/$defs/Limitation"
+      },
+      "title": "Limitations",
+      "type": "array"
+    },
+    "provenance_summary": {
+      "$ref": "#/$defs/TrustSummary"
+    },
+    "overall_verdict": {
+      "default": "NOT EXECUTED",
+      "enum": [
+        "READY",
+        "READY WITH GAPS",
+        "BLOCKED",
+        "NOT EXECUTED"
+      ],
+      "title": "Overall Verdict",
+      "type": "string"
+    }
+  },
+  "required": [
+    "meta",
+    "dependency"
+  ],
+  "title": "DependencyCapsule",
+  "type": "object"
+}

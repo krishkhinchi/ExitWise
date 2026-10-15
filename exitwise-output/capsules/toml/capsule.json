@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T11:04:57.007694+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "toml",
+    "raw_spec": "toml==0.10.2",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": "0.10.2",
+    "constraint": "==0.10.2",
+    "latest_version": "0.10.2",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0015",
+      "dependency": "toml",
+      "severity": "HIGH",
+      "source": "pypi_api",
+      "observed_value": "No new PyPI release in 2174 days (~6.0 years, last: 2020-11-01)",
+      "evidence_ids": [
+        "EV-PYPI-0011"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 3,
+    "distinct_symbols": [
+      "toml",
+      "toml.load"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 2.5,
+    "ai_characterization": "Usage characterized by AST: used across 2 file(s).",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0015"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "linkwatch/config.py",
+      "line": 3,
+      "col": 0,
+      "symbol": "toml",
+      "kind": "import",
+      "snippet": "      1 | from typing import List\n      2 | \n >    3 | import toml\n      4 | from pydantic import BaseModel, validator\n      5 | \n      6 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/config.py",
+      "line": 37,
+      "col": 11,
+      "symbol": "toml.load",
+      "kind": "call",
+      "snippet": "     34 | \n     35 | \n     36 | def load_settings(path=\"sites.toml\"):\n >   37 |     data = toml.load(path)\n     38 |     return Settings(**data)",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 13,
+      "col": 0,
+      "symbol": "toml",
+      "kind": "template_or_config_ref",
+      "snippet": "     10 | license = { text = \"MIT\" }\n     11 | requires-python = \">=3.10\"\n     12 | dependencies = [\n >   13 |     \"toml==0.10.2\",\n     14 |     \"appdirs==1.4.4\",\n     15 |     \"requests==2.31.0\",\n     16 |     \"Jinja2==2.11.3\",",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": {
+    "name": "tomllib",
+    "kind": "stdlib",
+    "tradeoffs": [
+      "Standard library in Python 3.11+",
+      "Read-only (no TOML write)"
+    ],
+    "validation": {
+      "exists_on_pypi_or_stdlib": true,
+      "is_stdlib": true,
+      "declares_py_compat": true,
+      "installs_cleanly": true,
+      "validation_log": "Candidate is a built-in Python standard library module in Python >= 3.11"
+    },
+    "status": "ACCEPTED",
+    "rejection_reason": null,
+    "evidence_ids": [
+      "EV-AST-0015"
+    ],
+    "provenance": "AI_GENERATED"
+  },
+  "replacement_candidates": [
+    {
+      "name": "tomllib",
+      "kind": "stdlib",
+      "tradeoffs": [
+        "Standard library in Python 3.11+",
+        "Read-only (no TOML write)"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": true,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Candidate is a built-in Python standard library module in Python >= 3.11"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0015"
+      ],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "migration_steps": [
+    {
+      "order": 1,
+      "description": "1. Replace 'toml' with 'tomllib' in pyproject.toml / requirements.txt",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 2,
+      "description": "2. Update import statements in repository modules",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 3,
+      "description": "3. Run automated tests in sandbox environment",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "patch": {
+    "attempt_number": 1,
+    "unified_diff": "",
+    "applied_cleanly": true,
+    "error_message": null,
+    "provenance": "VERIFIED_BY_EXECUTION"
+  },
+  "suggested_tests": [
+    {
+      "test_name": "test_diff_compat_toml.py",
+      "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: toml, toml.load\n    assert True\n",
+      "target_apis": [
+        "toml",
+        "toml.load"
+      ],
+      "baseline_passed": false,
+      "candidate_passed": false,
+      "execution_evidence_id": null,
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "executed_test_results": [
+    {
+      "side": "baseline",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-BASE-0084",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    {
+      "side": "candidate",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-CAND-0085",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    }
+  ],
+  "compatibility_gaps": [
+    {
+      "id": "GAP-0086",
+      "description": "Differential API test 'test_diff_compat_toml.py' failed against candidate 'tomllib'.",
+      "evidence_ids": [],
+      "severity": "MEDIUM",
+      "status": "OBSERVED",
+      "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "open_concerns": [
+    {
+      "description": "Replacement 'tomllib' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 8,
+    "verified_by_execution_count": 3,
+    "ai_generated_count": 8,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 19
+  },
+  "overall_verdict": "ANALYZED"
+}

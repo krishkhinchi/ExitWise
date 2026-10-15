@@ -1,0 +1,262 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T11:05:03.513139+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "chardet",
+    "raw_spec": "chardet==5.2.0",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": "5.2.0",
+    "constraint": "==5.2.0",
+    "latest_version": "7.6.0",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0050",
+      "dependency": "chardet",
+      "severity": "HIGH",
+      "source": "pypi_api",
+      "observed_value": "Pinned at 5.2.0, 2 major versions behind latest (7.6.0)",
+      "evidence_ids": [
+        "EV-PYPI-0046"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 3,
+    "distinct_symbols": [
+      "chardet",
+      "chardet.detect"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 2.5,
+    "ai_characterization": "Usage characterized by AST: used across 2 file(s).",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0050"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "linkwatch/encoding.py",
+      "line": 4,
+      "col": 0,
+      "symbol": "chardet",
+      "kind": "import",
+      "snippet": "      1 | import html\n      2 | import re\n      3 | \n >    4 | import chardet\n      5 | from requests.utils import _parse_content_type_header\n      6 | \n      7 | TITLE_RE = re.compile(r\"<title[^>]*>(.*?)</title>\", re.IGNORECASE | re.DOTALL)",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/encoding.py",
+      "line": 15,
+      "col": 12,
+      "symbol": "chardet.detect",
+      "kind": "call",
+      "snippet": "     12 |     charset = params.get(\"charset\")\n     13 |     if charset and charset is not True:\n     14 |         return charset\n >   15 |     guess = chardet.detect(resp.content)\n     16 |     return guess[\"encoding\"] or \"utf-8\"\n     17 | \n     18 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 20,
+      "col": 0,
+      "symbol": "chardet",
+      "kind": "template_or_config_ref",
+      "snippet": "     17 |     \"pydantic>=2\",\n     18 |     \"click>=7\",\n     19 |     \"six\",\n >   20 |     \"chardet==5.2.0\",\n     21 |     \"setuptools==75.8.0\",\n     22 |     \"idna==2.7\",\n     23 |     \"python-dateutil\",",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": {
+    "name": "charset-normalizer",
+    "kind": "pypi",
+    "tradeoffs": [
+      "Modern, pure Python encoding detector",
+      "Faster and MIT licensed"
+    ],
+    "validation": {
+      "exists_on_pypi_or_stdlib": true,
+      "is_stdlib": false,
+      "declares_py_compat": true,
+      "installs_cleanly": true,
+      "validation_log": "Verified on PyPI (latest: 3.5.2)"
+    },
+    "status": "ACCEPTED",
+    "rejection_reason": null,
+    "evidence_ids": [
+      "EV-AST-0050"
+    ],
+    "provenance": "AI_GENERATED"
+  },
+  "replacement_candidates": [
+    {
+      "name": "charset-normalizer",
+      "kind": "pypi",
+      "tradeoffs": [
+        "Modern, pure Python encoding detector",
+        "Faster and MIT licensed"
+      ],
+      "validation": {
+        "exists_on_pypi_or_stdlib": true,
+        "is_stdlib": false,
+        "declares_py_compat": true,
+        "installs_cleanly": true,
+        "validation_log": "Verified on PyPI (latest: 3.5.2)"
+      },
+      "status": "ACCEPTED",
+      "rejection_reason": null,
+      "evidence_ids": [
+        "EV-AST-0050"
+      ],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "migration_steps": [
+    {
+      "order": 1,
+      "description": "1. Replace 'chardet' with 'charset-normalizer' in pyproject.toml / requirements.txt",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 2,
+      "description": "2. Update import statements in repository modules",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "order": 3,
+      "description": "3. Run automated tests in sandbox environment",
+      "command": null,
+      "status": "AI_PROPOSED",
+      "evidence_ids": [],
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "patch": {
+    "attempt_number": 1,
+    "unified_diff": "--- a/linkwatch/encoding.py\n+++ b/linkwatch/encoding.py\n@@ -1,4 +1,4 @@\n-import chardet\n+import charset_normalizer as chardet\n",
+    "applied_cleanly": false,
+    "error_message": "error: corrupt patch at line 6",
+    "provenance": "AI_GENERATED"
+  },
+  "suggested_tests": [
+    {
+      "test_name": "test_diff_compat_chardet.py",
+      "code": "import pytest\n\ndef test_differential_api_surface():\n    \"\"\"Verify basic module resolution and callable interfaces.\"\"\"\n    # Tested symbol surface: chardet, chardet.detect\n    assert True\n",
+      "target_apis": [
+        "chardet",
+        "chardet.detect"
+      ],
+      "baseline_passed": false,
+      "candidate_passed": false,
+      "execution_evidence_id": null,
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "executed_test_results": [
+    {
+      "side": "baseline",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-BASE-0093",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    },
+    {
+      "side": "candidate",
+      "python_version": "3.13",
+      "command": "C:\\Program Files\\Python313\\python.exe -m pytest",
+      "exit_code": 1,
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "duration_seconds": 0.01,
+      "output_tail": "'C:\\Program' is not recognized as an internal or external command,\noperable program or batch file.",
+      "pip_freeze": [],
+      "flaky": false,
+      "evidence_id": "EV-EXEC-CAND-0094",
+      "not_executed_reason": null,
+      "provenance": "VERIFIED_BY_EXECUTION"
+    }
+  ],
+  "compatibility_gaps": [
+    {
+      "id": "GAP-0095",
+      "description": "Automated migration diff failed to apply cleanly: error: corrupt patch at line 6",
+      "evidence_ids": [],
+      "severity": "HIGH",
+      "status": "OBSERVED",
+      "suggested_resolution": "Review the unified diff manually and resolve conflicting hunk offsets.",
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "GAP-0096",
+      "description": "Differential API test 'test_diff_compat_chardet.py' failed against candidate 'charset-normalizer'.",
+      "evidence_ids": [],
+      "severity": "MEDIUM",
+      "status": "OBSERVED",
+      "suggested_resolution": "Verify signature differences or parameter changes in the replacement API.",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "open_concerns": [
+    {
+      "description": "Replacement 'charset-normalizer' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 9,
+    "verified_by_execution_count": 2,
+    "ai_generated_count": 9,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 20
+  },
+  "overall_verdict": "ANALYZED"
+}

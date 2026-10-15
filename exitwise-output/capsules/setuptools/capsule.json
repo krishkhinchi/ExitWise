@@ -1,0 +1,190 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T11:01:39.882399+00:00",
+    "target_repo_url": "https://github.com/rishrek/LinkWatch",
+    "target_commit_sha": "f52f3930c8e7c33d934ccf614955a38e26984bd5",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "setuptools",
+    "raw_spec": "setuptools==75.8.0",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": "75.8.0",
+    "constraint": "==75.8.0",
+    "latest_version": "84.0.0",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0055",
+      "dependency": "setuptools",
+      "severity": "CRITICAL",
+      "source": "osv_api",
+      "observed_value": "Found 4 known security vulnerabilities: GHSA-5rjg-fvgr-3xxf (setuptools has a path traversal vulnerability in PackageIndex.download that leads to Arbitrary File Write); GHSA-h35f-9h28-mq5c (setuptools: MANIFEST.in exclusion bypass in sdist via Unicode normalization collision (NFC/NFD) on macOS APFS/HFS+); PYSEC-2025-49 (setuptools is a package that allows users to download, build, install, upgrade, and uninstall Python packages. A path tr)",
+      "evidence_ids": [
+        "GHSA-5rjg-fvgr-3xxf",
+        "GHSA-h35f-9h28-mq5c",
+        "PYSEC-2025-49",
+        "PYSEC-2026-3447"
+      ],
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "RISK-0056",
+      "dependency": "setuptools",
+      "severity": "HIGH",
+      "source": "pypi_api",
+      "observed_value": "Pinned at 75.8.0, 9 major versions behind latest (84.0.0)",
+      "evidence_ids": [
+        "EV-PYPI-0051"
+      ],
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "RISK-0057",
+      "dependency": "setuptools",
+      "severity": "MEDIUM",
+      "source": "manifest_analyzer",
+      "observed_value": "Build/packaging tool 'setuptools' pinned directly in runtime dependencies instead of build-system",
+      "evidence_ids": [
+        "EV-PYPI-0051"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 2,
+    "total_occurrences": 7,
+    "distinct_symbols": [
+      "pkg_resources",
+      "pkg_resources.resource_filename",
+      "setuptools"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 3.0,
+    "ai_characterization": "The dependency 'setuptools' is used primarily for build-system configuration and project metadata via pyproject.toml and pyproject.toml-related configuration sections. It is also explicitly listed as a requirement in the build-system table and as a dependency in the project's dependency list. Additionally, 'pkg_resources' (part of the setuptools ecosystem) part of of the code uses it to locate template files via 'pkg_resources.resource_filename'.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0055"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "linkwatch/resources.py",
+      "line": 1,
+      "col": 0,
+      "symbol": "pkg_resources",
+      "kind": "import",
+      "snippet": " >    1 | import pkg_resources\n      2 | \n      3 | TEMPLATE_NAME = \"status.html.j2\"\n      4 | ",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "linkwatch/resources.py",
+      "line": 7,
+      "col": 11,
+      "symbol": "pkg_resources.resource_filename",
+      "kind": "call",
+      "snippet": "      4 | \n      5 | \n      6 | def template_dir():\n >    7 |     return pkg_resources.resource_filename(\"linkwatch\", \"templates\")",
+      "context": "runtime",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 2,
+      "col": 0,
+      "symbol": "setuptools",
+      "kind": "template_or_config_ref",
+      "snippet": "      1 | [build-system]\n >    2 | requires = [\"setuptools>=61\"]\n      3 | build-backend = \"setuptools.build_meta\"\n      4 | \n      5 | [project]",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 3,
+      "col": 0,
+      "symbol": "setuptools",
+      "kind": "template_or_config_ref",
+      "snippet": "      1 | [build-system]\n      2 | requires = [\"setuptools>=61\"]\n >    3 | build-backend = \"setuptools.build_meta\"\n      4 | \n      5 | [project]\n      6 | name = \"linkwatch\"",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 21,
+      "col": 0,
+      "symbol": "setuptools",
+      "kind": "template_or_config_ref",
+      "snippet": "     18 |     \"click>=7\",\n     19 |     \"six\",\n     20 |     \"chardet==5.2.0\",\n >   21 |     \"setuptools==75.8.0\",\n     22 |     \"idna==2.7\",\n     23 |     \"python-dateutil\",\n     24 |     \"rich\",",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 30,
+      "col": 0,
+      "symbol": "setuptools",
+      "kind": "template_or_config_ref",
+      "snippet": "     27 | [project.scripts]\n     28 | linkwatch = \"linkwatch.cli:cli\"\n     29 | \n >   30 | [tool.setuptools]\n     31 | packages = [\"linkwatch\"]\n     32 | \n     33 | [tool.setuptools.package-data]",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    },
+    {
+      "file": "pyproject.toml",
+      "line": 33,
+      "col": 0,
+      "symbol": "setuptools",
+      "kind": "template_or_config_ref",
+      "snippet": "     30 | [tool.setuptools]\n     31 | packages = [\"linkwatch\"]\n     32 | \n >   33 | [tool.setuptools.package-data]\n     34 | linkwatch = [\"templates/*.j2\"]\n     35 | \n     36 | [tool.pytest.ini_options]",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": null,
+  "replacement_candidates": [],
+  "migration_steps": [],
+  "patch": null,
+  "suggested_tests": [],
+  "executed_test_results": [],
+  "compatibility_gaps": [],
+  "open_concerns": [
+    {
+      "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 13,
+    "verified_by_execution_count": 0,
+    "ai_generated_count": 2,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 15
+  },
+  "overall_verdict": "NOT EXECUTED"
+}

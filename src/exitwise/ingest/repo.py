@@ -73,13 +73,69 @@ def prepare_workspace(target_input: str, dest_dir: Path) -> RepoInfo:
     dest_dir.mkdir(parents=True, exist_ok=True)
 
     if is_git_url(target_input):
-        subprocess.run(
-            ["git", "clone", "--depth", "1", target_input, str(dest_dir)],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=60,
-        )
+        import hashlib
+        cache_key = hashlib.sha256(target_input.encode("utf-8")).hexdigest()[:16]
+        cache_dir = Path(".cache") / "repos" / cache_key
+
+        git_env = {
+            **os.environ,
+            "GIT_TERMINAL_PROMPT": "0",
+            "GIT_ASKPASS": "",
+        }
+
+        # If already cached locally, pull latest or copy directly from cache
+        if cache_dir.is_dir() and (cache_dir / ".git").exists():
+            try:
+                subprocess.run(
+                    ["git", "fetch", "--depth", "1", "origin"],
+                    cwd=cache_dir,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                    env=git_env,
+                )
+                subprocess.run(
+                    ["git", "reset", "--hard", "origin/HEAD"],
+                    cwd=cache_dir,
+                    capture_output=True,
+                    text=True,
+                    timeout=5,
+                    env=git_env,
+                )
+            except Exception:
+                pass  # Use existing cache state
+        else:
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            try:
+                subprocess.run(
+                    [
+                        "git",
+                        "clone",
+                        "--depth", "1",
+                        "--single-branch",
+                        "--no-tags",
+                        target_input,
+                        str(cache_dir),
+                    ],
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    timeout=25,
+                    env=git_env,
+                )
+            except subprocess.TimeoutExpired:
+                shutil.rmtree(cache_dir, ignore_errors=True)
+                raise RuntimeError(f"Cloning '{target_input}' timed out after 25s. Check network or repository access.")
+            except subprocess.CalledProcessError as err:
+                shutil.rmtree(cache_dir, ignore_errors=True)
+                err_msg = (err.stderr or err.stdout or "Authentication required or repository not found").strip()
+                raise RuntimeError(f"Git clone failed: {err_msg}")
+
+        # Copy from cache to dest_dir
+        def _ignore_git(path: str, names: list[str]) -> set[str]:
+            return {".venv", "venv", "__pycache__", ".pytest_cache"}
+
+        shutil.copytree(cache_dir, dest_dir, dirs_exist_ok=True, ignore=_ignore_git)
     else:
         src_path = Path(target_input).resolve()
         if not src_path.exists() or not src_path.is_dir():

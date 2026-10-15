@@ -1,6 +1,6 @@
 # Dependency Exit Capsule: `requests`
 
-> **Verdict:** `NOT EXECUTED` | **Tool:** Exitwise v0.1.0 | **Generated:** 2026-10-15T07:16:33.042459+00:00
+> **Verdict:** `NOT EXECUTED` | **Tool:** Exitwise v0.1.0 | **Generated:** 2026-10-15T11:04:31.316634+00:00
 > **Gemma Model:** `gemma-4-26b-a4b-it` (Hosted Gemini API via official google-genai Python SDK)
 
 ## Trust Summary
@@ -24,7 +24,7 @@
 
 | ID | Severity | Indicator | Evidence | Provenance |
 |---|---|---|---|---|
-| `RISK-0005` | **CRITICAL** | Found 6 known security vulnerabilities: GHSA-9hjg-9r4m-mvj7 (Requests vulnerable to .netrc credentials leak via malicious URLs); GHSA-9wx4-h78v-vm56 (Requests `Session` object does not verify requests after making first request with verify=False); GHSA-gc5v-m9x4-r6x2 (Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function) | GHSA-9hjg-9r4m-mvj7, GHSA-9wx4-h78v-vm56, GHSA-gc5v-m9x4-r6x2, PYSEC-2026-1872, PYSEC-2026-1873, PYSEC-2026-2275 | `OBSERVED` |
+| `RISK-0025` | **CRITICAL** | Found 6 known security vulnerabilities: GHSA-9hjg-9r4m-mvj7 (Requests vulnerable to .netrc credentials leak via malicious URLs); GHSA-9wx4-h78v-vm56 (Requests `Session` object does not verify requests after making first request with verify=False); GHSA-gc5v-m9x4-r6x2 (Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function) | GHSA-9hjg-9r4m-mvj7, GHSA-9wx4-h78v-vm56, GHSA-gc5v-m9x4-r6x2, PYSEC-2026-1872, PYSEC-2026-1873, PYSEC-2026-2275 | `OBSERVED` |
 
 ## 3. Usage & Coupling
 

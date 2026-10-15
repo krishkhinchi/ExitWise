@@ -1,6 +1,6 @@
 # Dependency Exit Capsule: `idna`
 
-> **Verdict:** `NOT EXECUTED` | **Tool:** Exitwise v0.1.0 | **Generated:** 2026-10-15T07:16:55.334198+00:00
+> **Verdict:** `NOT EXECUTED` | **Tool:** Exitwise v0.1.0 | **Generated:** 2026-10-15T11:04:05.669653+00:00
 > **Gemma Model:** `gemma-4-26b-a4b-it` (Hosted Gemini API via official google-genai Python SDK)
 
 ## Trust Summary
@@ -24,8 +24,8 @@
 
 | ID | Severity | Indicator | Evidence | Provenance |
 |---|---|---|---|---|
-| `RISK-0010` | **CRITICAL** | Found 4 known security vulnerabilities: GHSA-65pc-fj4g-8rjx (Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix); GHSA-jjg7-2v4v-x38h (Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode); PYSEC-2024-60 (A vulnerability was identified in the kjd/idna library, specifically within the `idna.encode()` function, affecting vers) | GHSA-65pc-fj4g-8rjx, GHSA-jjg7-2v4v-x38h, PYSEC-2024-60, PYSEC-2026-215 | `OBSERVED` |
-| `RISK-0011` | **MEDIUM** | Pinned at 2.7, 1 major version behind latest (3.20) | EV-PYPI-0006 | `OBSERVED` |
+| `RISK-0060` | **CRITICAL** | Found 4 known security vulnerabilities: GHSA-65pc-fj4g-8rjx (Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix); GHSA-jjg7-2v4v-x38h (Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode); PYSEC-2024-60 (A vulnerability was identified in the kjd/idna library, specifically within the `idna.encode()` function, affecting vers) | GHSA-65pc-fj4g-8rjx, GHSA-jjg7-2v4v-x38h, PYSEC-2024-60, PYSEC-2026-215 | `OBSERVED` |
+| `RISK-0061` | **MEDIUM** | Pinned at 2.7, 1 major version behind latest (3.20) | EV-PYPI-0056 | `OBSERVED` |
 
 ## 3. Usage & Coupling
 

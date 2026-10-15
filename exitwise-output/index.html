@@ -3,48 +3,433 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Exitwise — Dependency Exit Capsules</title>
+  <title>Exitwise — Dependency Resilience Platform</title>
   <style>
     :root {
       --bg: #09090b;
       --bg-raised: #0f0f12;
       --bg-sunken: #060607;
+      --bg-hover: #16161a;
       --text: #fafafa;
       --text-2: #d4d4d8;
       --text-3: #a1a1aa;
       --text-4: #71717a;
       --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
       --accent: #5b8cff;
+      --accent-hover: #4a7ae8;
       --accent-2: #22d3ee;
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); color: var(--text-2); font-family: var(--font-sans); padding: 48px 24px; }
+    body { background: var(--bg); color: var(--text-2); font-family: var(--font-sans); padding: 48px 24px; min-height: 100vh; }
     .container { max-width: 1200px; margin: 0 auto; }
-    .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; color: var(--text-4); margin-bottom: 12px; }
-    h1 { font-size: 40px; color: var(--text); margin-bottom: 12px; font-weight: 600; }
+    
+    /* Header */
+    .eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; color: var(--text-4); margin-bottom: 12px; text-transform: uppercase; }
+    h1 { font-size: 40px; color: var(--text); margin-bottom: 12px; font-weight: 600; letter-spacing: -0.02em; }
     h1 em { font-family: Georgia, serif; font-style: italic; color: var(--accent); }
-    p.sub { font-size: 18px; color: var(--text-3); margin-bottom: 40px; }
-    table { width: 100%; border-collapse: collapse; background: var(--bg-raised); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    p.sub { font-size: 16px; color: var(--text-3); margin-bottom: 32px; }
+
+    /* Analysis Box */
+    .analysis-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .analysis-header { margin-bottom: 16px; }
+    .analysis-title { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .analysis-subtitle { font-size: 14px; color: var(--text-3); }
+    .input-row { display: flex; gap: 12px; align-items: center; margin-top: 16px; flex-wrap: wrap; }
+    .repo-input {
+      flex: 1;
+      min-width: 320px;
+      background: var(--bg-sunken);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-family: var(--font-mono);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+    .repo-input:focus { border-color: var(--accent); }
+    .primary-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.15s ease, transform 0.05s ease;
+      white-space: nowrap;
+    }
+    .primary-btn:hover { background: var(--accent-hover); }
+    .primary-btn:active { transform: scale(0.98); }
+    .primary-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .example-link {
+      background: none;
+      border: none;
+      color: var(--accent-2);
+      font-size: 12px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+      margin-top: 8px;
+      display: inline-block;
+    }
+    .repo-status-bar {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-3);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      margin-right: 6px;
+    }
+    .status-dot.active { animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+
+    /* Progress Widget */
+    .progress-widget {
+      display: none;
+      margin-top: 20px;
+      background: var(--bg-sunken);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .progress-bar-container {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.3s ease;
+    }
+    .stage-checklist {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+    }
+    .stage-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-4);
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+    .stage-item.done { color: var(--success); }
+    .stage-item.current { color: var(--accent-2); font-weight: 600; background: rgba(34, 211, 238, 0.08); }
+    .stage-icon { font-size: 11px; width: 14px; display: inline-block; }
+
+    /* Error alert */
+    .alert-error {
+      display: none;
+      margin-top: 16px;
+      padding: 12px 16px;
+      background: rgba(248, 113, 113, 0.12);
+      border: 1px solid rgba(248, 113, 113, 0.3);
+      border-radius: 8px;
+      color: #fca5a5;
+      font-size: 13px;
+    }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; background: var(--bg-raised); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 24px; }
     th { padding: 14px 18px; text-align: left; background: var(--bg-sunken); font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--text-4); border-bottom: 1px solid var(--line); }
-    td { padding: 16px 18px; border-bottom: 1px solid var(--line); }
+    td { padding: 16px 18px; border-bottom: 1px solid var(--line); font-size: 14px; }
     tr:last-child td { border-bottom: none; }
-    .verdict-badge { padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-    .verdict-ready { background: rgba(52, 211, 153, 0.2); color: #34d399; }
-    .verdict-warning { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
-    .verdict-blocked { background: rgba(248, 113, 113, 0.2); color: #f87171; }
-    .verdict-neutral { background: rgba(161, 161, 170, 0.2); color: #a1a1aa; }
-    .action-btn { font-size: 13px; color: var(--text); text-decoration: none; border: 1px solid var(--line); padding: 6px 12px; border-radius: 6px; }
-    .action-btn:hover { background: rgba(255, 255, 255, 0.08); }
-    code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; }
+    tr:hover td { background: var(--bg-hover); }
+    .verdict-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.04em; }
+    .verdict-ready { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.4); }
+    .verdict-warning { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.4); }
+    .verdict-blocked { background: rgba(248, 113, 113, 0.2); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.4); }
+    .verdict-neutral { background: rgba(161, 161, 170, 0.16); color: #a1a1aa; border: 1px solid rgba(161, 161, 170, 0.3); }
+    .verdict-analyzed { background: rgba(91, 140, 255, 0.2); color: #8bb2ff; border: 1px solid rgba(91, 140, 255, 0.4); }
+
+    .action-btn { font-size: 13px; color: var(--text); text-decoration: none; border: 1px solid var(--line); padding: 6px 14px; border-radius: 6px; background: rgba(255, 255, 255, 0.04); cursor: pointer; transition: all 0.15s ease; font-family: var(--font-sans); font-weight: 500; display: inline-block; }
+    .action-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: var(--line-strong); color: #fff; }
+    code { font-family: var(--font-mono); font-size: 12px; background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px; color: var(--text); }
+
+    /* Modal Backdrop & Drawer */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-content {
+      background: var(--bg-raised);
+      border: 1px solid var(--line-strong);
+      border-radius: 16px;
+      max-width: 960px;
+      width: 100%;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 24px 28px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      background: var(--bg-sunken);
+    }
+    .modal-title-group { display: flex; flex-direction: column; gap: 6px; }
+    .modal-body {
+      padding: 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .modal-close-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text-3);
+      font-size: 16px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .modal-close-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.08); }
+    .modal-actions-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+    .secondary-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      color: var(--text-2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .secondary-btn:hover { background: rgba(255, 255, 255, 0.12); color: #fff; border-color: var(--line-strong); }
+
+    /* Chapters inside Capsule Modal */
+    .capsule-section {
+      background: var(--bg-sunken);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .section-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-2);
+      margin-bottom: 8px;
+    }
+    .section-h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .hud-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+    }
+    .hud-num { font-size: 24px; font-weight: 600; line-height: 1; margin-bottom: 4px; font-family: var(--font-mono); }
+    .hud-label { font-size: 11px; color: var(--text-3); }
+
+    .diff-block {
+      background: #040405;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.5;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      color: var(--text-2);
+    }
+    .diff-plus { color: #34d399; }
+    .diff-minus { color: #f87171; }
+
+    .tag-ai {
+      display: inline-block;
+      font-size: 10px;
+      font-family: var(--font-mono);
+      background: rgba(167, 139, 250, 0.15);
+      color: #c4b5fd;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .copy-toast {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--success);
+      color: #000;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 2000;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="eyebrow">DEPENDENCY EXIT CAPSULES · INDEX</div>
+    <div class="eyebrow">DEPENDENCY EXIT CAPSULES · RESILIENCE PLATFORM</div>
     <h1>Exitwise. <em>Resilience</em> Dashboard.</h1>
-    <p class="sub">Evaluated dependencies for <code>C:\Users\KRISH\AppData\Local\Temp\test_linkwatch</code>.</p>
+    <p class="sub">Discover dependency risks. Evaluate replacements. Generate evidence-backed exit capsules.</p>
+
+    <!-- 1. GitHub Repository Input Section -->
+    <div class="analysis-card">
+      <div class="analysis-header">
+        <div class="analysis-title">Analyze a Repository</div>
+        <div class="analysis-subtitle">Paste a GitHub repository URL to dynamically analyze its dependency manifests, usage coupling, and exit capsules.</div>
+      </div>
+
+      <div class="input-row">
+        <input
+          id="repo-url-input"
+          class="repo-input"
+          type="url"
+          placeholder="https://github.com/owner/repository"
+          value="https://github.com/rishrek/LinkWatch"
+        />
+        <button id="analyze-btn" class="primary-btn" onclick="startAnalysis()">
+          <span>Analyze Repository →</span>
+        </button>
+      </div>
+
+      <div>
+        <button class="example-link" onclick="setExampleRepo('https://github.com/rishrek/LinkWatch')">
+          <!-- Try example: https://github.com/rishrek/LinkWatch -->
+        </button>
+      </div>
+
+      <!-- Error message container -->
+      <div id="error-alert" class="alert-error"></div>
+
+      <!-- Live progress widget -->
+      <div id="progress-widget" class="progress-widget">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+          <div>
+            <strong id="progress-stage-title" style="color: var(--text);">Stage 1 of 8: Validating repository</strong>
+            <span id="progress-discovered-count" style="margin-left: 10px; color: var(--text-3); font-family: var(--font-mono);"></span>
+          </div>
+          <span id="progress-percent" style="font-family: var(--font-mono); color: var(--accent-2); font-weight: 600;">10%</span>
+        </div>
+
+        <div class="progress-bar-container">
+          <div id="progress-bar-fill" class="progress-bar-fill"></div>
+        </div>
+
+        <div id="progress-status-msg" style="font-size: 12px; color: var(--text-3); font-family: var(--font-mono); margin-bottom: 10px;">
+          Connecting to backend analysis engine...
+        </div>
+
+        <div class="stage-checklist">
+          <div id="stage-item-1" class="stage-item"><span class="stage-icon">○</span> 1. Validating repository</div>
+          <div id="stage-item-2" class="stage-item"><span class="stage-icon">○</span> 2. Retrieving repository</div>
+          <div id="stage-item-3" class="stage-item"><span class="stage-icon">○</span> 3. Detecting manifests</div>
+          <div id="stage-item-4" class="stage-item"><span class="stage-icon">○</span> 4. Inspecting dependencies</div>
+          <div id="stage-item-5" class="stage-item"><span class="stage-icon">○</span> 5. Gathering risk evidence</div>
+          <div id="stage-item-6" class="stage-item"><span class="stage-icon">○</span> 6. Mapping dependency usage</div>
+          <div id="stage-item-7" class="stage-item"><span class="stage-icon">○</span> 7. Evaluating replacements</div>
+          <div id="stage-item-8" class="stage-item"><span class="stage-icon">○</span> 8. Preparing Exit Capsules</div>
+        </div>
+      </div>
+
+      <!-- Selected repository indicator -->
+      <div class="repo-status-bar">
+        <div>
+          <span id="status-dot" class="status-dot"></span>
+          <span>Inspecting: <strong id="current-repo-url" style="color: var(--text);">https://github.com/rishrek/LinkWatch</strong></span>
+        </div>
+        <div>
+          <span>Target Commit: <code id="current-commit-sha">5a2c91b7</code></span>
+          <span style="margin-left: 12px;">Ecosystem: <strong id="current-ecosystem" style="color: var(--accent-2);">Python</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Dependency Resilience Table -->
+    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
+      <h2 style="font-size: 20px; font-weight: 600; color: var(--text);">Evaluated Dependencies</h2>
+      <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-3);">
+        <span id="dep-count-badge">Discovered 14 dependencies</span>
+        <button class="secondary-btn" style="margin-left: 12px;" onclick="exportAnalysisReport('json')">Export JSON</button>
+        <button class="secondary-btn" onclick="exportAnalysisReport('markdown')">Export Report (MD)</button>
+      </div>
+    </div>
+
     <table>
       <thead>
         <tr>
@@ -58,40 +443,552 @@
           <th>Action</th>
         </tr>
       </thead>
-      <tbody>
-        
+      <tbody id="dependencies-tbody">
+        <!-- Rendered dynamically -->
         <tr>
           <td><strong><a href="capsules/requests/capsule.html" style="color: var(--accent); text-decoration: none;">requests</a></strong></td>
           <td><code>2.31.0</code></td>
-          <td><code>2.34.2</code></td>
+          <td><code>2.32.3</code></td>
           <td>8.5/10</td>
           <td><code>None (Monitor)</code></td>
           <td><span class="verdict-badge verdict-neutral">NOT EXECUTED</span></td>
-          <td>
-            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-3);">
-              12 obs · 0 ver · 2 ai
-            </span>
-          </td>
-          <td><a href="capsules/requests/capsule.html" class="action-btn">View Capsule →</a></td>
+          <td><span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-3);">12 obs · 0 ver · 2 ai</span></td>
+          <td><button class="action-btn" onclick="openCapsuleModal('requests')">View Capsule →</button></td>
         </tr>
-        
         <tr>
           <td><strong><a href="capsules/idna/capsule.html" style="color: var(--accent); text-decoration: none;">idna</a></strong></td>
           <td><code>2.7</code></td>
-          <td><code>3.20</code></td>
+          <td><code>3.10</code></td>
           <td>1.2/10</td>
           <td><code>None (Monitor)</code></td>
           <td><span class="verdict-badge verdict-neutral">NOT EXECUTED</span></td>
-          <td>
-            <span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-3);">
-              6 obs · 0 ver · 2 ai
-            </span>
-          </td>
-          <td><a href="capsules/idna/capsule.html" class="action-btn">View Capsule →</a></td>
+          <td><span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-3);">6 obs · 0 ver · 2 ai</span></td>
+          <td><button class="action-btn" onclick="openCapsuleModal('idna')">View Capsule →</button></td>
         </tr>
-        
       </tbody>
     </table>
   </div>
+
+  <!-- Capsule Modal Dialog (Chapters A - G) -->
+  <div id="capsule-modal" class="modal-backdrop" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <div class="section-eyebrow">DEPENDENCY EXIT CAPSULE · EVIDENCE-BACKED DOSSIER</div>
+          <h2 id="modal-dep-title" style="font-size: 24px; color: var(--text); font-weight: 600;">requests</h2>
+          <div style="display: flex; gap: 10px; align-items: center; margin-top: 4px;">
+            <span id="modal-verdict-badge" class="verdict-badge verdict-neutral">NOT EXECUTED</span>
+            <span id="modal-repo-info" style="font-size: 12px; font-family: var(--font-mono); color: var(--text-3);">Target: https://github.com/rishrek/LinkWatch</span>
+          </div>
+          <div class="modal-actions-bar">
+            <button class="secondary-btn" onclick="downloadModalCapsule('json')">⬇ Download JSON</button>
+            <button class="secondary-btn" onclick="downloadModalCapsule('markdown')">⬇ Download Markdown</button>
+            <button class="secondary-btn" onclick="copyMigrationSummary()">📋 Copy Migration Summary</button>
+            <a id="modal-standalone-link" class="secondary-btn" href="#" target="_blank">↗ Open Standalone HTML</a>
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="closeCapsuleModal()">✕</button>
+      </div>
+
+      <div class="modal-body" id="modal-body-content">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="copy-toast">Migration summary copied to clipboard!</div>
+
+  <script>
+    let currentAnalysisId = "current";
+    let activePollingInterval = null;
+    let currentModalDep = null;
+    let currentModalCapsuleData = null;
+
+    // Allow Enter key to trigger analysis
+    document.getElementById("repo-url-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") startAnalysis();
+    });
+
+    function setExampleRepo(url) {
+      document.getElementById("repo-url-input").value = url;
+    }
+
+    async function startAnalysis() {
+      const urlInput = document.getElementById("repo-url-input");
+      const url = urlInput.value.trim();
+      const errBox = document.getElementById("error-alert");
+      const btn = document.getElementById("analyze-btn");
+      
+      errBox.style.display = "none";
+      errBox.innerText = "";
+
+      if (!url) {
+        showError("Please enter a valid GitHub repository URL.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = "<span>Starting Analysis...</span>";
+
+      try {
+        const resp = await fetch("/api/repositories/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: url })
+        });
+
+        const data = await resp.json();
+        if (!resp.ok) {
+          throw new Error(data.detail || data.error || "Failed to start analysis");
+        }
+
+        currentAnalysisId = data.analysis_id;
+        document.getElementById("current-repo-url").innerText = data.repo_url;
+        showProgressWidget();
+        startPolling(currentAnalysisId);
+
+      } catch (err) {
+        showError(err.message);
+        btn.disabled = false;
+        btn.innerHTML = "<span>Analyze Repository →</span>";
+      }
+    }
+
+    function showError(msg) {
+      const errBox = document.getElementById("error-alert");
+      errBox.innerText = msg;
+      errBox.style.display = "block";
+    }
+
+    function showProgressWidget() {
+      const widget = document.getElementById("progress-widget");
+      widget.style.display = "block";
+      document.getElementById("status-dot").classList.add("active");
+    }
+
+    function hideProgressWidget() {
+      document.getElementById("status-dot").classList.remove("active");
+    }
+
+    function startPolling(analysisId) {
+      if (activePollingInterval) clearInterval(activePollingInterval);
+
+      activePollingInterval = setInterval(async () => {
+        try {
+          const resp = await fetch(`/api/analyses/${analysisId}`);
+          if (!resp.ok) return;
+          const anl = await resp.json();
+
+          updateProgressUI(anl);
+
+          if (anl.status === "COMPLETED" || anl.status === "COMPLETED_WITH_WARNINGS") {
+            clearInterval(activePollingInterval);
+            document.getElementById("analyze-btn").disabled = false;
+            document.getElementById("analyze-btn").innerHTML = "<span>Analyze Repository →</span>";
+            hideProgressWidget();
+            loadDependencies(analysisId);
+          } else if (anl.status === "FAILED") {
+            clearInterval(activePollingInterval);
+            document.getElementById("analyze-btn").disabled = false;
+            document.getElementById("analyze-btn").innerHTML = "<span>Retry Analysis →</span>";
+            hideProgressWidget();
+            showError("Analysis failed: " + (anl.error || anl.message || "Unknown error"));
+          }
+        } catch (e) {
+          console.error("Polling error:", e);
+        }
+      }, 1500);
+    }
+
+    function updateProgressUI(anl) {
+      const stageIdx = anl.stage_index || 1;
+      const totalStages = anl.total_stages || 8;
+      const progress = anl.progress || 10;
+      const stageName = anl.current_stage || "Inspecting repository";
+      const message = anl.message || "";
+      const commitSha = anl.commit_sha || "";
+      const ecosystem = anl.ecosystem || "Python";
+      const discCount = anl.discovered_count || 0;
+
+      document.getElementById("progress-stage-title").innerText = `Stage ${stageIdx} of ${totalStages}: ${stageName}`;
+      document.getElementById("progress-percent").innerText = `${progress}%`;
+      document.getElementById("progress-bar-fill").style.width = `${progress}%`;
+      document.getElementById("progress-status-msg").innerText = message;
+
+      if (discCount > 0) {
+        document.getElementById("progress-discovered-count").innerText = `· ${discCount} dependencies found`;
+      }
+      if (commitSha) {
+        document.getElementById("current-commit-sha").innerText = commitSha.slice(0, 8);
+      }
+      if (ecosystem) {
+        document.getElementById("current-ecosystem").innerText = ecosystem;
+      }
+
+      // Update checklist
+      for (let i = 1; i <= 8; i++) {
+        const item = document.getElementById(`stage-item-${i}`);
+        if (!item) continue;
+        item.classList.remove("done", "current");
+        const icon = item.querySelector(".stage-icon");
+        if (i < stageIdx) {
+          item.classList.add("done");
+          icon.innerText = "✓";
+        } else if (i === stageIdx) {
+          item.classList.add("current");
+          icon.innerText = "⟳";
+        } else {
+          icon.innerText = "○";
+        }
+      }
+    }
+
+    async function loadDependencies(analysisId) {
+      try {
+        let resp = await fetch(`/api/analyses/${analysisId}/dependencies`);
+        if (!resp.ok) {
+          resp = await fetch(`/api/capsules`);
+        }
+        if (!resp.ok) {
+          resp = await fetch(`./index.json`);
+        }
+        if (!resp.ok) return;
+        let deps = await resp.json();
+        if (Array.isArray(deps) && deps.length > 0 && deps[0].dependency) {
+          deps = deps.map(c => {
+            const dep = c.dependency || {};
+            const ts = c.provenance_summary || {};
+            const rep = c.proposed_replacement;
+            const usage = c.usage_summary || {};
+            return {
+              name: dep.name,
+              pinned_version: dep.pinned_version,
+              latest_version: dep.latest_version,
+              coupling_score: usage.coupling_score || 0,
+              candidate_name: rep ? rep.name : "None (Monitor)",
+              verdict: c.overall_verdict || "NOT EXECUTED",
+              trust_obs: ts.observed_count || 0,
+              trust_ver: ts.verified_by_execution_count || 0,
+              trust_ai: ts.ai_generated_count || 0,
+            };
+          });
+        }
+        renderDependenciesTable(deps);
+      } catch (err) {
+        console.error("Failed to load dependencies:", err);
+      }
+    }
+
+    function renderDependenciesTable(deps) {
+      const tbody = document.getElementById("dependencies-tbody");
+      document.getElementById("dep-count-badge").innerText = `Discovered ${deps.length} dependencies`;
+
+      if (!deps || deps.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-4); padding: 32px;">No dependencies found in this repository.</td></tr>`;
+        return;
+      }
+
+      let html = "";
+      deps.forEach(d => {
+        const pinned = d.pinned_version || (d.constraint_spec ? d.constraint_spec : "unpinned");
+        const latest = d.latest_version || "Unknown";
+        const coupling = (typeof d.coupling_score === "number") ? `${d.coupling_score.toFixed(1)}/10` : "0.0/10";
+        const cand = d.candidate_name || "None (Monitor)";
+        const verdict = d.verdict || "NOT EXECUTED";
+
+        let verdictCls = "verdict-neutral";
+        if (verdict === "READY" || verdict === "TEST PASSED") verdictCls = "verdict-ready";
+        else if (verdict === "READY WITH GAPS" || verdict === "RISK DETECTED" || verdict === "NEEDS REVIEW") verdictCls = "verdict-warning";
+        else if (verdict === "BLOCKED" || verdict === "TEST FAILED") verdictCls = "verdict-blocked";
+        else if (verdict === "ANALYZED") verdictCls = "verdict-analyzed";
+
+        const trust = `${d.trust_obs || 0} obs · ${d.trust_ver || 0} ver · ${d.trust_ai || 0} ai`;
+
+        html += `
+          <tr>
+            <td><strong><a href="javascript:void(0)" onclick="openCapsuleModal('${d.name}')" style="color: var(--accent); text-decoration: none;">${escapeHtml(d.name)}</a></strong></td>
+            <td><code>${escapeHtml(pinned)}</code></td>
+            <td><code>${escapeHtml(latest)}</code></td>
+            <td>${coupling}</td>
+            <td><code>${escapeHtml(cand)}</code></td>
+            <td><span class="verdict-badge ${verdictCls}">${escapeHtml(verdict)}</span></td>
+            <td><span style="font-size: 11px; font-family: var(--font-mono); color: var(--text-3);">${trust}</span></td>
+            <td><button class="action-btn" onclick="openCapsuleModal('${d.name}')">View Capsule →</button></td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+
+    async function openCapsuleModal(depName) {
+      currentModalDep = depName;
+      const modal = document.getElementById("capsule-modal");
+      const body = document.getElementById("modal-body-content");
+      
+      document.getElementById("modal-dep-title").innerText = depName;
+      document.getElementById("modal-standalone-link").href = `/capsule/${depName}`;
+      body.innerHTML = `<div style="text-align: center; padding: 40px; color: var(--text-3); font-family: var(--font-mono);">Loading capsule data...</div>`;
+      modal.style.display = "flex";
+
+      try {
+        let resp = await fetch(`/api/analyses/${currentAnalysisId}/capsules/${depName}`);
+        if (!resp.ok) {
+          resp = await fetch(`/api/capsules/${depName}`);
+        }
+        if (!resp.ok) {
+          resp = await fetch(`/capsules/${depName}/capsule.json`);
+        }
+        if (!resp.ok) {
+          throw new Error("Capsule data not found.");
+        }
+        const payload = await resp.json();
+        const cap = payload.data || payload;
+        currentModalCapsuleData = cap;
+
+        renderModalCapsule(cap);
+      } catch (err) {
+        body.innerHTML = `<div style="color: var(--danger); padding: 24px;">Failed to load capsule: ${err.message}</div>`;
+      }
+    }
+
+    function renderModalCapsule(cap) {
+      const dep = cap.dependency || {};
+      const meta = cap.meta || {};
+      const ts = cap.provenance_summary || {};
+      const usage = cap.usage_summary || {};
+      const locs = cap.usage_locations || [];
+      const risks = cap.risk_indicators || [];
+      const rep = cap.proposed_replacement;
+      const patch = cap.patch;
+      const tests = cap.executed_test_results || [];
+      const gaps = cap.compatibility_gaps || [];
+      const concerns = cap.open_concerns || [];
+      const limits = cap.limitations || [];
+
+      document.getElementById("modal-verdict-badge").innerText = cap.overall_verdict || "NOT EXECUTED";
+      document.getElementById("modal-repo-info").innerText = `Target: ${meta.target_repo_url || ''} (${(meta.target_commit_sha || '').slice(0, 8)})`;
+
+      let riskRows = "";
+      risks.forEach(r => {
+        riskRows += `<tr>
+          <td><code>${escapeHtml(r.id)}</code></td>
+          <td><span style="color: ${r.severity === 'CRITICAL' ? '#f87171' : '#fbbf24'}; font-weight:600;">${r.severity}</span></td>
+          <td>${escapeHtml(r.observed_value)}</td>
+          <td><code>${escapeHtml((r.evidence_ids || []).join(', ') || '-')}</code></td>
+        </tr>`;
+      });
+      if (!riskRows) riskRows = `<tr><td colspan="4" style="color: var(--text-4);">No active vulnerabilities flagged.</td></tr>`;
+
+      let usageRows = "";
+      locs.slice(0, 10).forEach(u => {
+        usageRows += `<tr>
+          <td><code>${escapeHtml(u.file)}:${u.line}</code></td>
+          <td><code>${escapeHtml(u.symbol)}</code></td>
+          <td><span style="font-size:11px; color: var(--text-3);">${escapeHtml(u.kind)}</span></td>
+          <td><code style="font-size:11px;">${escapeHtml(u.snippet || '')}</code></td>
+        </tr>`;
+      });
+      if (!usageRows) usageRows = `<tr><td colspan="4" style="color: var(--text-4);">No source usage locations found.</td></tr>`;
+
+      let testRows = "";
+      tests.forEach(t => {
+        testRows += `<tr>
+          <td><strong>${t.side.toUpperCase()}</strong></td>
+          <td><code>Python ${t.python_version}</code></td>
+          <td><span style="color: ${t.exit_code === 0 ? '#34d399' : '#f87171'}; font-weight:600;">${t.exit_code}</span></td>
+          <td>${t.passed} passed, ${t.failed} failed</td>
+          <td>${t.duration_seconds}s</td>
+        </tr>`;
+      });
+      if (!testRows) testRows = `<tr><td colspan="5" style="color: var(--text-4);">No sandbox executions recorded.</td></tr>`;
+
+      const diffHtml = (patch && patch.unified_diff) ? `
+        <div class="diff-block">
+          ${patch.unified_diff.split('\n').map(line => {
+            if (line.startsWith('+')) return `<span class="diff-plus">${escapeHtml(line)}</span>`;
+            if (line.startsWith('-')) return `<span class="diff-minus">${escapeHtml(line)}</span>`;
+            return escapeHtml(line);
+          }).join('\n')}
+        </div>
+      ` : '<p style="color: var(--text-4); font-size: 13px;">No diff required or proposed.</p>';
+
+      const modalHtml = `
+        <!-- Chapter G: Trust HUD -->
+        <div class="capsule-section">
+          <div class="section-eyebrow">PROVENANCE & TRUST SUMMARY</div>
+          <div class="hud-grid">
+            <div class="hud-card">
+              <div class="hud-num" style="color: var(--accent-2);">${ts.observed_count || 0}</div>
+              <div class="hud-label">Observed Facts</div>
+            </div>
+            <div class="hud-card">
+              <div class="hud-num" style="color: var(--success);">${ts.verified_by_execution_count || 0}</div>
+              <div class="hud-label">Verified By Execution</div>
+            </div>
+            <div class="hud-card">
+              <div class="hud-num" style="color: #c4b5fd;">${ts.ai_generated_count || 0}</div>
+              <div class="hud-label">AI Proposed (Gemma 4)</div>
+            </div>
+            <div class="hud-card">
+              <div class="hud-num" style="color: var(--warning);">${ts.ai_verified_count || 0}</div>
+              <div class="hud-label">AI Verified by Run</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chapter A: Overview -->
+        <div class="capsule-section">
+          <div class="section-eyebrow">CHAPTER A · DEPENDENCY OVERVIEW</div>
+          <div class="section-h3">${escapeHtml(dep.name)} Overview</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 13px;">
+            <div><strong>Declared spec:</strong> <code>${escapeHtml(dep.raw_spec || 'none')}</code></div>
+            <div><strong>Pinned version:</strong> <code>${escapeHtml(dep.pinned_version || 'unpinned')}</code></div>
+            <div><strong>Latest published:</strong> <code>${escapeHtml(dep.latest_version || 'unknown')}</code></div>
+            <div><strong>Coupling score:</strong> <strong>${usage.coupling_score || 0}/10</strong></div>
+          </div>
+          ${usage.ai_characterization ? `<p style="margin-top:14px; font-size:13px; color: var(--text-2); background: rgba(255,255,255,0.03); padding:10px; border-radius:6px;"><span class="tag-ai">AI EXPLANATION</span> ${escapeHtml(usage.ai_characterization)}</p>` : ''}
+        </div>
+
+        <!-- Chapter B: Risk Evidence -->
+        <div class="capsule-section">
+          <div class="section-eyebrow">CHAPTER B · RISK EVIDENCE & ADVISORIES</div>
+          <div class="section-h3">Vulnerabilities, Maintenance & Compatibility</div>
+          <table style="margin-top: 10px;">
+            <thead><tr><th>ID</th><th>Severity</th><th>Observed Finding</th><th>Evidence</th></tr></thead>
+            <tbody>${riskRows}</tbody>
+          </table>
+        </div>
+
+        <!-- Chapter C: Repository Usage -->
+        <div class="capsule-section">
+          <div class="section-eyebrow">CHAPTER C · REPOSITORY USAGE & COUPLING</div>
+          <div class="section-h3">Coupled in ${usage.total_files || 0} files (${usage.total_occurrences || 0} references) ${usage.is_monkey_patched ? '<span style="color:#f87171; font-weight:600;">[DYNAMIC MONKEY-PATCHING HAZARD]</span>' : ''}</div>
+          <table style="margin-top: 10px;">
+            <thead><tr><th>Location</th><th>Symbol</th><th>Kind</th><th>Snippet</th></tr></thead>
+            <tbody>${usageRows}</tbody>
+          </table>
+        </div>
+
+        <!-- Chapter D: Proposed Replacement -->
+        <div class="capsule-section">
+          <div class="section-eyebrow">CHAPTER D · PROPOSED REPLACEMENT & DIFF</div>
+          <div class="section-h3">Candidate: <code>${rep ? escapeHtml(rep.name) : 'None (Monitor)'}</code> ${rep ? `<span class="tag-ai">AI PROPOSED</span>` : ''}</div>
+          ${rep ? `
+            <div style="font-size: 13px; margin-bottom: 12px;">
+              <p><strong>Kind:</strong> ${escapeHtml(rep.kind)} · <strong>Status:</strong> ${escapeHtml(rep.status)}</p>
+              <p style="color: var(--text-3); margin-top: 4px;"><strong>Tradeoffs:</strong> ${(rep.tradeoffs || []).join('; ') || 'None noted'}</p>
+            </div>
+            ${(cap.migration_steps && cap.migration_steps.length > 0) ? `
+              <div style="margin: 12px 0;">
+                <div style="font-size: 12px; font-family: var(--font-mono); color: var(--accent-2); margin-bottom: 6px;">ORDERED MIGRATION STEPS:</div>
+                <ol style="padding-left: 20px; font-size: 13px; color: var(--text-2);">
+                  ${cap.migration_steps.map(s => `<li>${escapeHtml(s.description)}</li>`).join('')}
+                </ol>
+              </div>
+            ` : ''}
+          ` : '<p style="color: var(--text-3); font-size: 13px;">No automated replacement package necessary.</p>'}
+          <div style="margin-top: 14px;">
+            <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-4); margin-bottom: 6px;">MIGRATION PATCH:</div>
+            ${diffHtml}
+          </div>
+        </div>
+
+        <!-- Chapter E: Execution Evidence -->
+        <div class="capsule-section">
+          <div class="section-eyebrow">CHAPTER E · EXECUTION EVIDENCE</div>
+          <div class="section-h3">Baseline vs Replacement Differential Run</div>
+          <table style="margin-top: 10px;">
+            <thead><tr><th>Side</th><th>Interpreter</th><th>Exit Code</th><th>Results</th><th>Duration</th></tr></thead>
+            <tbody>${testRows}</tbody>
+          </table>
+        </div>
+
+        <!-- Chapter F: Concerns & Next Steps -->
+        <div class="capsule-section">
+          <div class="section-eyebrow">CHAPTER F · REMAINING CONCERNS & GAPS</div>
+          <div class="section-h3">Compatibility Gaps & Inconclusive Findings</div>
+          ${gaps.length > 0 ? gaps.map(g => `
+            <div style="margin-bottom: 10px; padding: 10px; background: var(--bg-raised); border-radius: 6px; border: 1px solid var(--line);">
+              <strong>[${g.severity}] ${escapeHtml(g.id)}:</strong> ${escapeHtml(g.description)}
+              <div style="font-size: 12px; color: var(--text-3); margin-top: 4px;"><strong>Resolution:</strong> ${escapeHtml(g.suggested_resolution)}</div>
+            </div>
+          `).join('') : '<p style="font-size: 13px; color: var(--text-3);">No open compatibility gaps surfaced.</p>'}
+          ${limits.length > 0 ? `
+            <div style="margin-top: 14px;">
+              <div style="font-size: 12px; font-family: var(--font-mono); color: var(--text-4); margin-bottom: 6px;">LIMITATIONS & TEST BOUNDARIES:</div>
+              <ul style="padding-left: 20px; font-size: 13px; color: var(--text-3);">
+                ${limits.map(l => `<li>${escapeHtml(l.description)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      document.getElementById("modal-body-content").innerHTML = modalHtml;
+    }
+
+    function closeCapsuleModal() {
+      document.getElementById("capsule-modal").style.display = "none";
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === "capsule-modal") closeCapsuleModal();
+    }
+
+    function downloadModalCapsule(format) {
+      if (!currentModalDep) return;
+      window.location.href = `/api/analyses/${currentAnalysisId}/export?format=${format}&dependency=${currentModalDep}`;
+    }
+
+    function exportAnalysisReport(format) {
+      window.location.href = `/api/analyses/${currentAnalysisId}/export?format=${format}`;
+    }
+
+    function copyMigrationSummary() {
+      if (!currentModalCapsuleData) return;
+      const cap = currentModalCapsuleData;
+      const dep = cap.dependency ? cap.dependency.name : currentModalDep;
+      const cand = cap.proposed_replacement ? cap.proposed_replacement.name : "None (Monitor)";
+      const verdict = cap.overall_verdict || "NOT EXECUTED";
+      const steps = (cap.migration_steps || []).map(s => `${s.order}. ${s.description}`).join('\n');
+
+      const text = `EXITWISE MIGRATION SUMMARY: ${dep}
+- Target: ${cap.meta ? cap.meta.target_repo_url : ''}
+- Proposed Replacement: ${cand}
+- Overall Verdict: ${verdict}
+- Coupling Score: ${cap.usage_summary ? cap.usage_summary.coupling_score : '0'}/10
+
+MIGRATION STEPS:
+${steps || 'No automated migration steps.'}
+`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById("toast");
+        toast.style.display = "block";
+        setTimeout(() => { toast.style.display = "none"; }, 3000);
+      });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return "";
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // Load initial dependencies on page load
+    window.addEventListener("DOMContentLoaded", () => {
+      loadDependencies("current");
+      document.getElementById("demo-mode-toggle").addEventListener("change", (e) => {
+        if (!e.target.checked) showDemoBanner(false);
+      });
+    });
+
+    window.addEventListener("pagehide", () => stopAnalysisSession());
+  </script>
 </body>
 </html>
