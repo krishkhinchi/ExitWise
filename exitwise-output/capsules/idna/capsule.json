@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "schema_version": "1.0.0",
+    "tool_name": "Exitwise",
+    "tool_version": "0.1.0",
+    "generated_at": "2026-10-15T07:16:55.334198+00:00",
+    "target_repo_url": "C:\\Users\\KRISH\\AppData\\Local\\Temp\\test_linkwatch",
+    "target_commit_sha": "d912307480fcacc57bb07b5de486f57edef5767f",
+    "tested_python_versions": [
+      "3.13"
+    ],
+    "gemma_model_id": "gemma-4-26b-a4b-it",
+    "access_method": "Hosted Gemini API via official google-genai Python SDK",
+    "cached": false
+  },
+  "dependency": {
+    "name": "idna",
+    "raw_spec": "idna==2.7",
+    "source_manifests": [
+      "requirements.txt",
+      "pyproject.toml"
+    ],
+    "pinned_version": "2.7",
+    "constraint": "==2.7",
+    "latest_version": "3.20",
+    "provenance": "OBSERVED"
+  },
+  "risk_indicators": [
+    {
+      "id": "RISK-0010",
+      "dependency": "idna",
+      "severity": "CRITICAL",
+      "source": "osv_api",
+      "observed_value": "Found 4 known security vulnerabilities: GHSA-65pc-fj4g-8rjx (Internationalized Domain Names in Applications (IDNA): Specially crafted inputs to idna.encode() can bypass CVE-2024-3651 fix); GHSA-jjg7-2v4v-x38h (Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode); PYSEC-2024-60 (A vulnerability was identified in the kjd/idna library, specifically within the `idna.encode()` function, affecting vers)",
+      "evidence_ids": [
+        "GHSA-65pc-fj4g-8rjx",
+        "GHSA-jjg7-2v4v-x38h",
+        "PYSEC-2024-60",
+        "PYSEC-2026-215"
+      ],
+      "provenance": "OBSERVED"
+    },
+    {
+      "id": "RISK-0011",
+      "dependency": "idna",
+      "severity": "MEDIUM",
+      "source": "pypi_api",
+      "observed_value": "Pinned at 2.7, 1 major version behind latest (3.20)",
+      "evidence_ids": [
+        "EV-PYPI-0006"
+      ],
+      "provenance": "OBSERVED"
+    }
+  ],
+  "usage_summary": {
+    "total_files": 1,
+    "total_occurrences": 1,
+    "distinct_symbols": [
+      "idna"
+    ],
+    "is_monkey_patched": false,
+    "is_test_only": false,
+    "coupling_score": 1.2,
+    "ai_characterization": "The dependency 'idna' is listed as a direct requirement in the project's dependency specification file (likely requirements.txt or pyproject.toml), but there are no functional code implementations or direct API calls observed in the provided snippets. The coupling is limited to version pinning.",
+    "ai_characterization_evidence_ids": [
+      "EV-AST-0010"
+    ],
+    "provenance": "OBSERVED"
+  },
+  "usage_locations": [
+    {
+      "file": "pyproject.toml",
+      "line": 22,
+      "col": 0,
+      "symbol": "idna",
+      "kind": "template_or_config_ref",
+      "snippet": "     19 |     \"six\",\n     20 |     \"chardet==5.2.0\",\n     21 |     \"setuptools==75.8.0\",\n >   22 |     \"idna==2.7\",\n     23 |     \"python-dateutil\",\n     24 |     \"rich\",\n     25 | ]",
+      "context": "config_or_template",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "proposed_replacement": null,
+  "replacement_candidates": [],
+  "migration_steps": [],
+  "patch": null,
+  "suggested_tests": [],
+  "executed_test_results": [],
+  "compatibility_gaps": [],
+  "open_concerns": [
+    {
+      "description": "Replacement 'None' may introduce new transitive dependencies requiring separate audit.",
+      "category": "transitive_dependencies",
+      "provenance": "AI_GENERATED"
+    },
+    {
+      "description": "Code paths with dynamic parameters or external network endpoints require runtime staging verification.",
+      "category": "untested_runtime_paths",
+      "provenance": "AI_GENERATED"
+    }
+  ],
+  "limitations": [
+    {
+      "description": "Test runs were executed in an isolated local sandbox with loopback networking enabled.",
+      "category": "sandbox_environment",
+      "provenance": "OBSERVED"
+    }
+  ],
+  "provenance_summary": {
+    "observed_count": 6,
+    "verified_by_execution_count": 0,
+    "ai_generated_count": 2,
+    "ai_verified_count": 0,
+    "not_verified_count": 0,
+    "total_claims": 8
+  },
+  "overall_verdict": "NOT EXECUTED"
+}

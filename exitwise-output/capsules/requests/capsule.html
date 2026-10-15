@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Exitwise Capsule — requests</title>
+  <style>
+    :root {
+      --bg: #09090b;
+      --bg-raised: #0f0f12;
+      --bg-sunken: #060607;
+      --bg-hover: #16161a;
+      --text: #fafafa;
+      --text-2: #d4d4d8;
+      --text-3: #a1a1aa;
+      --text-4: #71717a;
+      --line: rgba(255, 255, 255, 0.08);
+      --line-strong: rgba(255, 255, 255, 0.16);
+      --accent: #5b8cff;
+      --accent-2: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #f87171;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-pill: 9999px;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text-2);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 48px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 32px;
+    }
+    .mono-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-4);
+      margin-bottom: 8px;
+    }
+    h1.editorial-h1 {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+    h1.editorial-h1 em {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-style: italic;
+      font-weight: 400;
+      color: var(--accent);
+    }
+    .lead {
+      font-size: 18px;
+      color: var(--text-3);
+      max-width: 800px;
+    }
+    /* Trust Summary HUD */
+    .trust-hud {
+      background: var(--bg-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 48px;
+    }
+    .hud-title {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .hud-card {
+      background: var(--bg-sunken);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+    .hud-num {
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .hud-label {
+      font-size: 13px;
+      color: var(--text-3);
+    }
+    .prov-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      font-size: 13px;
+    }
+    /* Provenance badges */
+    .prov-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 10px;
+      border-radius: var(--radius-pill);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .prov-observed { background: rgba(34, 211, 238, 0.12); color: #22d3ee; border: 1px solid rgba(34, 211, 238, 0.3); }
+    .prov-verified { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+    .prov-ai { background: rgba(167, 139, 250, 0.12); color: #a78bfa; border: 1px solid rgba(167, 139, 250, 0.3); }
+    .prov-ai-verified { background: rgba(251, 191, 36, 0.12); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+    .prov-not-verified { background: rgba(248, 113, 113, 0.12); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.3); }
+
+    /* Chapter Anatomy */
+    .chapter {
+      margin-bottom: 64px;
+    }
+    .chapter-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-4);
+      margin-bottom: 8px;
+    }
+    .chapter-h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .chapter-h2 em {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-style: italic;
+      color: var(--text);
+    }
+
+    /* Data Tables */
+    table.editorial-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: var(--bg-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    table.editorial-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: var(--bg-sunken);
+      color: var(--text-4);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+    }
+    table.editorial-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text-2);
+      vertical-align: top;
+    }
+    table.editorial-table tr:last-child td {
+      border-bottom: none;
+    }
+    code {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text);
+    }
+
+    /* Severity Pills */
+    .severity-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+    .sev-critical { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+    .sev-high { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
+    .sev-medium { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .sev-low { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+
+    .verdict-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+    .verdict-ready { background: rgba(52, 211, 153, 0.2); color: #34d399; border: 1px solid #34d399; }
+    .verdict-warning { background: rgba(251, 191, 36, 0.2); color: #fbbf24; border: 1px solid #fbbf24; }
+    .verdict-blocked { background: rgba(248, 113, 113, 0.2); color: #f87171; border: 1px solid #f87171; }
+    .verdict-neutral { background: rgba(161, 161, 170, 0.2); color: #a1a1aa; border: 1px solid #a1a1aa; }
+
+    /* Diff View */
+    .diff-container {
+      background: var(--bg-sunken);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 20px 0;
+    }
+    .diff-header {
+      background: var(--bg-raised);
+      padding: 10px 16px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-3);
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+    .diff-body {
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      overflow-x: auto;
+      color: var(--text-2);
+    }
+
+    /* Gap Card */
+    .gap-card {
+      background: var(--bg-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .gap-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .gap-resolution {
+      color: var(--text-3);
+      font-size: 14px;
+    }
+    footer {
+      border-top: 1px solid var(--line);
+      padding-top: 32px;
+      margin-top: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-4);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="mono-eyebrow">DEPENDENCY EXIT CAPSULE · TRACK 1 GEMMA 4</div>
+      <h1 class="editorial-h1">Exitwise: requests.</h1>
+      <p class="lead">Gemma proposes; the machine verifies; the capsule records which is which.</p>
+      <div style="margin-top: 20px; display: flex; gap: 16px; align-items: center;">
+        <span class="verdict-badge verdict-neutral">VERDICT: NOT EXECUTED</span>
+        <span style="color: var(--text-3); font-size: 14px;">Target: <code>C:\Users\KRISH\AppData\Local\Temp\test_linkwatch</code> (d9123074)</span>
+      </div>
+    </header>
+
+    <!-- Trust Summary HUD -->
+    <div class="trust-hud">
+      <div class="hud-title">● TRUST SUMMARY & PROVENANCE BREAKDOWN</div>
+      <div class="hud-grid">
+        <div class="hud-card">
+          <div class="hud-num" style="color: #22d3ee;">12</div>
+          <div class="hud-label">Observed Directly (Code / Registry)</div>
+        </div>
+        <div class="hud-card">
+          <div class="hud-num" style="color: #34d399;">0</div>
+          <div class="hud-label">Verified By Execution (Sandbox Tests)</div>
+        </div>
+        <div class="hud-card">
+          <div class="hud-num" style="color: #a78bfa;">2</div>
+          <div class="hud-label">AI Proposed by Gemma (Unverified)</div>
+        </div>
+        <div class="hud-card">
+          <div class="hud-num" style="color: #fbbf24;">0</div>
+          <div class="hud-label">AI Proposed & Verified by Run</div>
+        </div>
+      </div>
+      <div class="prov-legend">
+        <span><strong>Legend:</strong></span>
+        <span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span>
+        <span class="prov-badge prov-verified" title="VERIFIED BY EXECUTION"><span class="prov-icon" aria-hidden="true">✓</span> VERIFIED BY EXECUTION</span>
+        <span class="prov-badge prov-ai" title="AI PROPOSED"><span class="prov-icon" aria-hidden="true">✦</span> AI PROPOSED</span>
+        <span class="prov-badge prov-ai-verified" title="AI VERIFIED"><span class="prov-icon" aria-hidden="true">★</span> AI VERIFIED</span>
+        <span class="prov-badge prov-not-verified" title="NOT VERIFIED"><span class="prov-icon" aria-hidden="true">⚠</span> NOT VERIFIED</span>
+      </div>
+    </div>
+
+    <!-- Chapter 01: Risk Indicators -->
+    <section class="chapter">
+      <div class="chapter-label">01 / SURFACED RISKS</div>
+      <h2 class="chapter-h2">Identified <em>Vulnerabilities</em> & Drift.</h2>
+      <table class="editorial-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Severity</th>
+            <th>Observed Finding</th>
+            <th>Evidence IDs</th>
+            <th>Provenance</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td><code>RISK-0005</code></td>
+          <td><span class="severity-pill sev-critical">CRITICAL</span></td>
+          <td>Found 6 known security vulnerabilities: GHSA-9hjg-9r4m-mvj7 (Requests vulnerable to .netrc credentials leak via malicious URLs); GHSA-9wx4-h78v-vm56 (Requests `Session` object does not verify requests after making first request with verify=False); GHSA-gc5v-m9x4-r6x2 (Requests has Insecure Temp File Reuse in its extract_zipped_paths() utility function)</td>
+          <td><code>GHSA-9hjg-9r4m-mvj7, GHSA-9wx4-h78v-vm56, GHSA-gc5v-m9x4-r6x2, PYSEC-2026-1872, PYSEC-2026-1873, PYSEC-2026-2275</code></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Chapter 02: Code Usage -->
+    <section class="chapter">
+      <div class="chapter-label">02 / USAGE ANALYSIS</div>
+      <h2 class="chapter-h2">Where and <em>how</em> it is coupled.</h2>
+      <div style="margin-bottom: 16px; color: var(--text-3);">
+        Coupling Score: <strong>8.5 / 10</strong> |
+        Files: <strong>4</strong> |
+        Dynamic Patching: <strong>YES (High Risk Hazard)</strong>
+      </div>
+      <table class="editorial-table">
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Line</th>
+            <th>Symbol</th>
+            <th>Kind</th>
+            <th>Context</th>
+            <th>Provenance</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr>
+          <td><code>linkwatch/checker.py</code></td>
+          <td>5</td>
+          <td><code>requests</code></td>
+          <td><span class="badge-subtle">import</span></td>
+          <td><span class="badge-subtle">runtime</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        <tr>
+          <td><code>linkwatch/checker.py</code></td>
+          <td>6</td>
+          <td><code>requests.Session</code></td>
+          <td><span class="badge-subtle">import_from</span></td>
+          <td><span class="badge-subtle">runtime</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        <tr>
+          <td><code>linkwatch/checker.py</code></td>
+          <td>13</td>
+          <td><code>requests.Session</code></td>
+          <td><span class="badge-subtle">call</span></td>
+          <td><span class="badge-subtle">runtime</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        <tr>
+          <td><code>linkwatch/encoding.py</code></td>
+          <td>5</td>
+          <td><code>requests.utils._parse_content_type_header</code></td>
+          <td><span class="badge-subtle">import_from</span></td>
+          <td><span class="badge-subtle">runtime</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        <tr>
+          <td><code>linkwatch/encoding.py</code></td>
+          <td>11</td>
+          <td><code>requests.utils._parse_content_type_header</code></td>
+          <td><span class="badge-subtle">call</span></td>
+          <td><span class="badge-subtle">runtime</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        <tr>
+          <td><code>linkwatch/http_patch.py</code></td>
+          <td>1</td>
+          <td><code>requests</code></td>
+          <td><span class="badge-subtle">import</span></td>
+          <td><span class="badge-subtle">runtime</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        <tr>
+          <td><code>linkwatch/http_patch.py</code></td>
+          <td>14</td>
+          <td><code>requests.Session.request</code></td>
+          <td><span class="badge-subtle">patch</span></td>
+          <td><span class="badge-subtle">patching</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        <tr>
+          <td><code>pyproject.toml</code></td>
+          <td>15</td>
+          <td><code>requests</code></td>
+          <td><span class="badge-subtle">template_or_config_ref</span></td>
+          <td><span class="badge-subtle">config_or_template</span></td>
+          <td><span class="prov-badge prov-observed" title="OBSERVED"><span class="prov-icon" aria-hidden="true">◉</span> OBSERVED</span></td>
+        </tr>
+        
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Chapter 03: Proposed Replacement -->
+    <section class="chapter">
+      <div class="chapter-label">03 / PROPOSAL & DIFF</div>
+      <h2 class="chapter-h2">Candidate <em>Migration</em> Path.</h2>
+      <p>Keep and monitor.</p>
+      
+    </section>
+
+    <!-- Chapter 04: Execution Results -->
+    <section class="chapter">
+      <div class="chapter-label">04 / EXECUTION EVIDENCE</div>
+      <h2 class="chapter-h2">Baseline vs Candidate <em>Verification</em>.</h2>
+      <table class="editorial-table">
+        <thead>
+          <tr>
+            <th>Side</th>
+            <th>Interpreter</th>
+            <th>Exit Code</th>
+            <th>Passed</th>
+            <th>Failed</th>
+            <th>Duration</th>
+            <th>Provenance</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Chapter 05: Gaps -->
+    <section class="chapter">
+      <div class="chapter-label">05 / COMPATIBILITY GAPS</div>
+      <h2 class="chapter-h2">Surfaced <em>Gaps</em> & Concerns.</h2>
+      <p class="text-secondary">No compatibility gaps identified.</p>
+    </section>
+
+    <footer>
+      <div>Generated by <strong>Exitwise</strong> v0.1.0</div>
+      <div>Gemma Model: <code>gemma-4-26b-a4b-it</code></div>
+      <div>Terms: Apache-2.0</div>
+    </footer>
+  </div>
+</body>
+</html>

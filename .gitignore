@@ -27,7 +27,6 @@ venv/
 ENV/
 
 # Output and temp
-exitwise-output/
 tmp/
 .cache/
 .pytest_cache/
