@@ -14,13 +14,17 @@ from exitwise.usage.importmap import get_import_names_for_dist, normalize_distri
 STDLIB_MODULE_NAMES = set(sys.stdlib_module_names) if hasattr(sys, "stdlib_module_names") else set()
 
 
-def extract_snippet(file_path: Path, line_number: int, context_lines: int = 3) -> str:
+def extract_snippet(
+    file_path: Path,
+    line_number: int,
+    context_lines: int = 3,
+    _lines_cache: list[str] | None = None,
+) -> str:
     """Extract code snippet centered at line_number with surrounding context."""
     try:
-        lines = file_path.read_text(encoding="utf-8", errors="ignore").splitlines()
+        lines = _lines_cache if _lines_cache is not None else file_path.read_text(encoding="utf-8", errors="ignore").splitlines()
         start = max(0, line_number - context_lines - 1)
         end = min(len(lines), line_number + context_lines)
-
         snippet_lines = []
         for idx in range(start, end):
             curr_lineno = idx + 1
@@ -34,11 +38,12 @@ def extract_snippet(file_path: Path, line_number: int, context_lines: int = 3) -
 class RepoASTVisitor(ast.NodeVisitor):
     """AST Visitor that tracks module aliases, usage sites, and dynamic patching."""
 
-    def __init__(self, file_path: Path, rel_path: str, target_import_names: set[str]):
+    def __init__(self, file_path: Path, rel_path: str, target_import_names: set[str], lines_cache: list[str] | None = None):
         self.file_path = file_path
         self.rel_path = rel_path
         self.target_names = {name.lower() for name in target_import_names}
         self.locations: list[UsageLocation] = []
+        self._lines = lines_cache
 
         # Local alias tracking within the file
         # alias -> root module name (e.g. 'req' -> 'requests')
@@ -50,6 +55,9 @@ class RepoASTVisitor(ast.NodeVisitor):
 
     def _matches_target(self, root_name: str) -> bool:
         return root_name.lower() in self.target_names
+
+    def _snippet(self, lineno: int) -> str:
+        return extract_snippet(self.file_path, lineno, _lines_cache=self._lines)
 
     def visit_Import(self, node: ast.Import) -> None:
         for alias in node.names:
@@ -64,7 +72,7 @@ class RepoASTVisitor(ast.NodeVisitor):
                         col=node.col_offset,
                         symbol=alias.name,
                         kind="import",
-                        snippet=extract_snippet(self.file_path, node.lineno),
+                        snippet=self._snippet(node.lineno),
                         context=self.context,
                         provenance=Provenance.OBSERVED,
                     )
@@ -86,7 +94,7 @@ class RepoASTVisitor(ast.NodeVisitor):
                             col=node.col_offset,
                             symbol=full_symbol,
                             kind="import_from",
-                            snippet=extract_snippet(self.file_path, node.lineno),
+                            snippet=self._snippet(node.lineno),
                             context=self.context,
                             provenance=Provenance.OBSERVED,
                         )
@@ -97,41 +105,25 @@ class RepoASTVisitor(ast.NodeVisitor):
         """Detect dynamic patching: e.g. requests.Session.request = _request."""
         for target in node.targets:
             if isinstance(target, ast.Attribute):
-                # Check target attribute chain
                 chain = self._resolve_attribute_chain(target)
                 if chain:
                     root_name = chain[0]
-                    # Check if root is an imported target module or symbol alias
                     if root_name in self.module_aliases and self._matches_target(self.module_aliases[root_name]):
-                        patched_symbol = ".".join(chain)
-                        self.locations.append(
-                            UsageLocation(
-                                file=self.rel_path,
-                                line=node.lineno,
-                                col=node.col_offset,
-                                symbol=patched_symbol,
-                                kind="patch",
-                                snippet=extract_snippet(self.file_path, node.lineno),
-                                context="patching",
-                                provenance=Provenance.OBSERVED,
-                            )
-                        )
+                        self.locations.append(UsageLocation(
+                            file=self.rel_path, line=node.lineno, col=node.col_offset,
+                            symbol=".".join(chain), kind="patch",
+                            snippet=self._snippet(node.lineno), context="patching",
+                            provenance=Provenance.OBSERVED,
+                        ))
                     elif root_name in self.symbol_aliases:
                         root, full_sym = self.symbol_aliases[root_name]
                         if self._matches_target(root):
-                            patched_symbol = f"{full_sym}.{'.'.join(chain[1:])}"
-                            self.locations.append(
-                                UsageLocation(
-                                    file=self.rel_path,
-                                    line=node.lineno,
-                                    col=node.col_offset,
-                                    symbol=patched_symbol,
-                                    kind="patch",
-                                    snippet=extract_snippet(self.file_path, node.lineno),
-                                    context="patching",
-                                    provenance=Provenance.OBSERVED,
-                                )
-                            )
+                            self.locations.append(UsageLocation(
+                                file=self.rel_path, line=node.lineno, col=node.col_offset,
+                                symbol=f"{full_sym}.{'.'.join(chain[1:])}", kind="patch",
+                                snippet=self._snippet(node.lineno), context="patching",
+                                provenance=Provenance.OBSERVED,
+                            ))
         self.generic_visit(node)
 
     def visit_Call(self, node: ast.Call) -> None:
@@ -140,49 +132,30 @@ class RepoASTVisitor(ast.NodeVisitor):
         if chain:
             root_name = chain[0]
             if root_name in self.module_aliases and self._matches_target(self.module_aliases[root_name]):
-                self.locations.append(
-                    UsageLocation(
-                        file=self.rel_path,
-                        line=node.lineno,
-                        col=node.col_offset,
-                        symbol=".".join(chain),
-                        kind="call",
-                        snippet=extract_snippet(self.file_path, node.lineno),
-                        context=self.context,
-                        provenance=Provenance.OBSERVED,
-                    )
-                )
+                self.locations.append(UsageLocation(
+                    file=self.rel_path, line=node.lineno, col=node.col_offset,
+                    symbol=".".join(chain), kind="call",
+                    snippet=self._snippet(node.lineno), context=self.context,
+                    provenance=Provenance.OBSERVED,
+                ))
             elif root_name in self.symbol_aliases:
                 root, full_sym = self.symbol_aliases[root_name]
                 if self._matches_target(root):
-                    self.locations.append(
-                        UsageLocation(
-                            file=self.rel_path,
-                            line=node.lineno,
-                            col=node.col_offset,
-                            symbol=full_sym,
-                            kind="call",
-                            snippet=extract_snippet(self.file_path, node.lineno),
-                            context=self.context,
-                            provenance=Provenance.OBSERVED,
-                        )
-                    )
-        elif isinstance(node.func, ast.Name):
-            if node.func.id in self.symbol_aliases:
-                root, full_sym = self.symbol_aliases[node.func.id]
-                if self._matches_target(root):
-                    self.locations.append(
-                        UsageLocation(
-                            file=self.rel_path,
-                            line=node.lineno,
-                            col=node.col_offset,
-                            symbol=full_sym,
-                            kind="call",
-                            snippet=extract_snippet(self.file_path, node.lineno),
-                            context=self.context,
-                            provenance=Provenance.OBSERVED,
-                        )
-                    )
+                    self.locations.append(UsageLocation(
+                        file=self.rel_path, line=node.lineno, col=node.col_offset,
+                        symbol=full_sym, kind="call",
+                        snippet=self._snippet(node.lineno), context=self.context,
+                        provenance=Provenance.OBSERVED,
+                    ))
+        elif isinstance(node.func, ast.Name) and node.func.id in self.symbol_aliases:
+            root, full_sym = self.symbol_aliases[node.func.id]
+            if self._matches_target(root):
+                self.locations.append(UsageLocation(
+                    file=self.rel_path, line=node.lineno, col=node.col_offset,
+                    symbol=full_sym, kind="call",
+                    snippet=self._snippet(node.lineno), context=self.context,
+                    provenance=Provenance.OBSERVED,
+                ))
         self.generic_visit(node)
 
     def visit_ClassDef(self, node: ast.ClassDef) -> None:
@@ -192,48 +165,30 @@ class RepoASTVisitor(ast.NodeVisitor):
             if chain:
                 root_name = chain[0]
                 if root_name in self.module_aliases and self._matches_target(self.module_aliases[root_name]):
-                    self.locations.append(
-                        UsageLocation(
-                            file=self.rel_path,
-                            line=node.lineno,
-                            col=node.col_offset,
-                            symbol=f"class {node.name}({'.'.join(chain)})",
-                            kind="inheritance",
-                            snippet=extract_snippet(self.file_path, node.lineno),
-                            context=self.context,
-                            provenance=Provenance.OBSERVED,
-                        )
-                    )
+                    self.locations.append(UsageLocation(
+                        file=self.rel_path, line=node.lineno, col=node.col_offset,
+                        symbol=f"class {node.name}({'.'.join(chain)})", kind="inheritance",
+                        snippet=self._snippet(node.lineno), context=self.context,
+                        provenance=Provenance.OBSERVED,
+                    ))
                 elif root_name in self.symbol_aliases:
                     root, full_sym = self.symbol_aliases[root_name]
                     if self._matches_target(root):
-                        self.locations.append(
-                            UsageLocation(
-                                file=self.rel_path,
-                                line=node.lineno,
-                                col=node.col_offset,
-                                symbol=f"class {node.name}({full_sym})",
-                                kind="inheritance",
-                                snippet=extract_snippet(self.file_path, node.lineno),
-                                context=self.context,
-                                provenance=Provenance.OBSERVED,
-                            )
-                        )
+                        self.locations.append(UsageLocation(
+                            file=self.rel_path, line=node.lineno, col=node.col_offset,
+                            symbol=f"class {node.name}({full_sym})", kind="inheritance",
+                            snippet=self._snippet(node.lineno), context=self.context,
+                            provenance=Provenance.OBSERVED,
+                        ))
             elif isinstance(base, ast.Name) and base.id in self.symbol_aliases:
                 root, full_sym = self.symbol_aliases[base.id]
                 if self._matches_target(root):
-                    self.locations.append(
-                        UsageLocation(
-                            file=self.rel_path,
-                            line=node.lineno,
-                            col=node.col_offset,
-                            symbol=f"class {node.name}({full_sym})",
-                            kind="inheritance",
-                            snippet=extract_snippet(self.file_path, node.lineno),
-                            context=self.context,
-                            provenance=Provenance.OBSERVED,
-                        )
-                    )
+                    self.locations.append(UsageLocation(
+                        file=self.rel_path, line=node.lineno, col=node.col_offset,
+                        symbol=f"class {node.name}({full_sym})", kind="inheritance",
+                        snippet=self._snippet(node.lineno), context=self.context,
+                        provenance=Provenance.OBSERVED,
+                    ))
         self.generic_visit(node)
 
     def _resolve_attribute_chain(self, node: ast.AST) -> list[str] | None:
@@ -250,6 +205,34 @@ class RepoASTVisitor(ast.NodeVisitor):
         return None
 
 
+_SKIP_PARTS = {".venv", "venv", "__pycache__", ".git", "exitwise-output"}
+
+# Pre-parsed repo cache: repo_dir -> list of (py_file, rel_path, lines, tree)
+_REPO_AST_CACHE: dict[Path, list[tuple[Path, str, list[str], ast.AST]]] = {}
+
+
+def _get_repo_parsed_files(repo_dir: Path) -> list[tuple[Path, str, list[str], ast.AST]]:
+    """Parse all Python files in repo once and cache the result."""
+    if repo_dir in _REPO_AST_CACHE:
+        return _REPO_AST_CACHE[repo_dir]
+
+    parsed: list[tuple[Path, str, list[str], ast.AST]] = []
+    for py_file in repo_dir.rglob("*.py"):
+        if any(part in _SKIP_PARTS for part in py_file.parts):
+            continue
+        try:
+            content = py_file.read_text(encoding="utf-8", errors="ignore")
+            lines = content.splitlines()
+            tree = ast.parse(content, filename=str(py_file))
+            rel_path = str(py_file.relative_to(repo_dir)).replace("\\", "/")
+            parsed.append((py_file, rel_path, lines, tree))
+        except Exception:
+            continue
+
+    _REPO_AST_CACHE[repo_dir] = parsed
+    return parsed
+
+
 def scan_repo_usage_for_dependency(
     repo_dir: Path,
     dist_name: str,
@@ -259,14 +242,9 @@ def scan_repo_usage_for_dependency(
     target_names = get_import_names_for_dist(dist_name)
     all_locations: list[UsageLocation] = []
 
-    for py_file in repo_dir.rglob("*.py"):
-        if any(part in py_file.parts for part in (".venv", "venv", "__pycache__", ".git", "exitwise-output")):
-            continue
+    for py_file, rel_path, lines, tree in _get_repo_parsed_files(repo_dir):
         try:
-            content = py_file.read_text(encoding="utf-8", errors="ignore")
-            tree = ast.parse(content, filename=str(py_file))
-            rel_path = str(py_file.relative_to(repo_dir)).replace("\\", "/")
-            visitor = RepoASTVisitor(py_file, rel_path, target_names)
+            visitor = RepoASTVisitor(py_file, rel_path, target_names, lines_cache=lines)
             visitor.visit(tree)
             all_locations.extend(visitor.locations)
         except Exception:
@@ -294,13 +272,8 @@ def find_undeclared_imports(repo_dir: Path, declared_distributions: set[str]) ->
     declared_canonical = {canonicalize_name(d) for d in declared_distributions}
     undeclared: list[tuple[str, str, int]] = []
 
-    for py_file in repo_dir.rglob("*.py"):
-        if any(part in py_file.parts for part in (".venv", "venv", "__pycache__", ".git", "exitwise-output")):
-            continue
+    for py_file, rel_path, _lines, tree in _get_repo_parsed_files(repo_dir):
         try:
-            content = py_file.read_text(encoding="utf-8", errors="ignore")
-            tree = ast.parse(content, filename=str(py_file))
-            rel_path = str(py_file.relative_to(repo_dir)).replace("\\", "/")
             for node in ast.walk(tree):
                 root_pkg = None
                 lineno = getattr(node, "lineno", 1)
@@ -312,7 +285,6 @@ def find_undeclared_imports(repo_dir: Path, declared_distributions: set[str]) ->
 
                 if root_pkg and root_pkg not in STDLIB_MODULE_NAMES:
                     dist = normalize_distribution_name(root_pkg)
-                    # Check if dist is internal repo package
                     is_internal = (repo_dir / root_pkg).is_dir() or (repo_dir / f"{root_pkg}.py").is_file()
                     if not is_internal and dist not in declared_canonical:
                         undeclared.append((dist, rel_path, lineno))

@@ -4,6 +4,7 @@ import json
 import shutil
 import sys
 import tempfile
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 import click
 from rich.console import Console
@@ -40,6 +41,19 @@ from exitwise.capsule.verify import verify_capsule_directory, write_manifest_and
 from exitwise.models import DependencyRecord, MigrationStep, Provenance
 
 console = Console()
+
+
+def _fetch_signals(disp_name, pinned_version, ev_counter, offline_signals):
+    """Fetch PyPI, OSV, and GitHub signals concurrently for a single dependency."""
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        f_pypi = pool.submit(fetch_pypi_metadata, disp_name, pinned_version, ev_counter, offline_signals)
+        f_osv = pool.submit(query_osv_vulnerabilities, disp_name, pinned_version, ev_counter + 1, offline_signals)
+        # GitHub URL is in PyPI metadata — fetch PyPI first, then GitHub in parallel with OSV
+        pypi, pypi_ev = f_pypi.result()
+        f_gh = pool.submit(fetch_github_health, disp_name, pypi.project_urls, ev_counter + 2, offline_signals)
+        vulns, osv_ev = f_osv.result()
+        gh, gh_ev = f_gh.result()
+    return pypi, pypi_ev, vulns, osv_ev, gh, gh_ev
 
 
 @click.group()
@@ -90,12 +104,10 @@ def scan(target: str, only: str | None, offline_signals: bool):
                 continue
             seen_deps.add(r.name)
 
-            pypi, pypi_ev = fetch_pypi_metadata(r.display_name, r.pinned_version, ev_counter, offline_signals)
-            ev_counter += 1
-            vulns, osv_ev = query_osv_vulnerabilities(r.display_name, r.pinned_version, ev_counter, offline_signals)
-            ev_counter += 1
-            gh, gh_ev = fetch_github_health(r.display_name, pypi.project_urls, ev_counter, offline_signals)
-            ev_counter += 1
+            pypi, pypi_ev, vulns, osv_ev, gh, gh_ev = _fetch_signals(
+                r.display_name, r.pinned_version, ev_counter, offline_signals
+            )
+            ev_counter += 3
             py_compat, compat_ev = evaluate_python_compatibility(r.display_name, pypi.requires_python, pypi.classifiers, ev_counter)
             ev_counter += 1
 
@@ -252,13 +264,11 @@ def run(target: str, only: str | None, model: str, python_ver: str, offline_sign
                 disp_name = first_r.display_name
                 progress.update(main_task, description=f"[cyan]Analyzing [bold]{disp_name}[/bold]...")
 
-                # 1. Signals & Risk Scoring
-                pypi, pypi_ev = fetch_pypi_metadata(disp_name, first_r.pinned_version, ev_counter, offline_signals)
-                ev_counter += 1
-                vulns, osv_ev = query_osv_vulnerabilities(disp_name, first_r.pinned_version, ev_counter, offline_signals)
-                ev_counter += 1
-                gh, gh_ev = fetch_github_health(disp_name, pypi.project_urls, ev_counter, offline_signals)
-                ev_counter += 1
+                # 1. Signals & Risk Scoring — PyPI + OSV + GitHub fetched concurrently
+                pypi, pypi_ev, vulns, osv_ev, gh, gh_ev = _fetch_signals(
+                    disp_name, first_r.pinned_version, ev_counter, offline_signals
+                )
+                ev_counter += 3
                 py_compat, compat_ev = evaluate_python_compatibility(disp_name, pypi.requires_python, pypi.classifiers, ev_counter)
                 ev_counter += 1
 

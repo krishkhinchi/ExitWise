@@ -37,13 +37,18 @@ COMMON_DIST_TO_IMPORT: dict[str, set[str]] = {
 }
 
 
+_IMPORT_TO_DIST_CACHE: dict[str, list[str]] | None = None
+
+
 def get_import_to_dist_map() -> dict[str, list[str]]:
-    """Return top-level import name to distribution name mappings."""
-    try:
-        pkgs = packages_distributions()
-        return pkgs
-    except Exception:
-        return {}
+    """Return top-level import name to distribution name mappings (cached)."""
+    global _IMPORT_TO_DIST_CACHE
+    if _IMPORT_TO_DIST_CACHE is None:
+        try:
+            _IMPORT_TO_DIST_CACHE = packages_distributions()
+        except Exception:
+            _IMPORT_TO_DIST_CACHE = {}
+    return _IMPORT_TO_DIST_CACHE
 
 
 def normalize_distribution_name(import_or_dist_name: str) -> str:
